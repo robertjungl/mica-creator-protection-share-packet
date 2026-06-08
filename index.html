@@ -1,0 +1,2592 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MICA Creator Protection Share Packet</title>
+  <style>
+    :root {
+      --bg: oklch(0.985 0.006 95);
+      --panel: oklch(1 0 0);
+      --ink: oklch(0.17 0.018 255);
+      --muted: oklch(0.46 0.02 250);
+      --line: oklch(0.88 0.012 250);
+      --accent: oklch(0.48 0.145 250);
+      --accent-2: oklch(0.62 0.12 155);
+      --warn: oklch(0.57 0.16 35);
+      --shadow: 0 12px 35px oklch(0.25 0.02 250 / 0.08);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    a { color: var(--accent); }
+    header {
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .topbar {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+    }
+    .brand { font-weight: 760; letter-spacing: 0; }
+    .download-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 650;
+    }
+    .button.primary {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 20px 70px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+      gap: 22px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+    .hero-copy, .share-card, .directory, .case, .notice {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-copy { padding: 28px; }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .subtitle {
+      margin: 0;
+      max-width: 72ch;
+      color: var(--muted);
+      font-size: 17px;
+    }
+    .share-card { padding: 22px; }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 780;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      min-height: 82px;
+    }
+    .stat strong {
+      display: block;
+      font-size: 25px;
+      line-height: 1.1;
+    }
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .notice {
+      padding: 18px 20px;
+      margin: 0 0 24px;
+      border-left: 4px solid var(--warn);
+    }
+    .notice p { margin: 0; }
+    .layout {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+    aside {
+      position: sticky;
+      top: 16px;
+    }
+    .directory { padding: 16px; }
+    .directory h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+    .search {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 12px;
+      font: inherit;
+      margin-bottom: 12px;
+      background: oklch(0.985 0.004 250);
+    }
+    .directory-list {
+      display: grid;
+      gap: 7px;
+      max-height: calc(100vh - 190px);
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .directory-row {
+      display: grid;
+      gap: 2px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      text-decoration: none;
+      background: var(--panel);
+      color: var(--ink);
+    }
+    .directory-row span {
+      font-size: 14px;
+      font-weight: 680;
+      overflow-wrap: anywhere;
+    }
+    .directory-row small { color: var(--muted); }
+    .case {
+      padding: 24px;
+      margin-bottom: 22px;
+      scroll-margin-top: 18px;
+    }
+    .case-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 18px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+    }
+    .case h2 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 38px);
+      line-height: 1.05;
+      overflow-wrap: anywhere;
+      letter-spacing: 0;
+    }
+    .case h3 {
+      margin: 24px 0 10px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+    .jump-link {
+      flex: 0 0 auto;
+      font-size: 13px;
+      text-decoration: none;
+      color: var(--muted);
+    }
+    .case-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 14px;
+    }
+    .case-stats span, .chips span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 4px 10px;
+      font-size: 13px;
+      background: oklch(0.985 0.004 250);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0 0 14px;
+    }
+    .chips span {
+      color: oklch(0.25 0.08 250);
+      background: oklch(0.96 0.025 250);
+      border-color: oklch(0.86 0.045 250);
+    }
+    .summary {
+      color: var(--ink);
+      font-size: 16px;
+      margin: 0 0 12px;
+    }
+    .messages, .markers {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .messages li, .markers li {
+      border-left: 3px solid var(--accent-2);
+      padding: 9px 12px;
+      background: oklch(0.98 0.01 155);
+      border-radius: 0 6px 6px 0;
+    }
+    .messages span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .messages p { margin: 4px 0 0; }
+    .exhibits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+    .exhibit {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      background: oklch(0.992 0.003 250);
+    }
+    .exhibit img, .exhibit video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      background: oklch(0.93 0.006 250);
+    }
+    .exhibit audio {
+      width: calc(100% - 16px);
+      margin: 12px 8px 0;
+    }
+    .file-icon {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: oklch(0.93 0.012 250);
+      color: var(--muted);
+      font-weight: 800;
+    }
+    .exhibit-meta, .caption, .open-link {
+      display: block;
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+    .exhibit-meta {
+      color: var(--muted);
+      font-weight: 700;
+      padding-bottom: 0;
+    }
+    .open-link {
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .caption {
+      color: var(--ink);
+      overflow-wrap: anywhere;
+    }
+    .missing {
+      border-color: oklch(0.83 0.09 35);
+      background: oklch(0.96 0.025 35);
+    }
+    .no-exhibits { color: var(--muted); }
+    @media (max-width: 860px) {
+      .hero, .layout { grid-template-columns: 1fr; }
+      aside { position: static; }
+      .directory-list { max-height: none; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .case-head { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">MICA Creator Protection Share Packet</div>
+      <nav class="download-links" aria-label="Packet files">
+        <a class="button primary" href="MICA-Main-Share-Document-2026-06-07.docx">Download DOCX</a>
+        <a class="button" href="MICA-Main-Share-Document-2026-06-07.html">Open long report</a>
+        <a class="button" href="evidence-index.csv">Evidence CSV</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Shareable web packet</p>
+        <h1>MICA Creator Protection Evidence Hub</h1>
+        <p class="subtitle">A clickable overview for MICA members, journalists, and Meta/Instagram escalation contacts. Use the directory to jump by member, read the short case summary, and open the supporting screenshots, videos, documents, voice notes, and source links.</p>
+      </div>
+      <div class="share-card">
+        <p class="eyebrow">Packet status</p>
+        <p>Generated June 07, 2026. Keep this file in the same folder as <strong>evidence-files</strong> so every exhibit link works.</p>
+        <div class="stat-grid">
+          <div class="stat"><strong>30</strong><span>member case entries</span></div>
+          <div class="stat"><strong>129</strong><span>downloaded exhibits</span></div>
+          <div class="stat"><strong>21</strong><span>cases with exhibits</span></div>
+          <div class="stat"><strong>1</strong><span>folder to share</span></div>
+        </div>
+      </div>
+    </section>
+    <section class="notice">
+      <p><strong>Use note:</strong> This is not a legal filing. Member claims are presented as reported unless separately verified. For public sharing, upload the whole folder, not only this HTML file.</p>
+    </section>
+    <div class="layout">
+      <aside>
+        <section class="directory">
+          <h2>Case Directory</h2>
+          <input id="search" class="search" type="search" placeholder="Search creator, issue, message, exhibit..." aria-label="Search cases">
+          <div class="directory-list" id="directory">
+            
+            <a class="directory-row" href="#case-TheMcFreakery" data-search="themcfreakery (mcfreakery) copyright strike">
+              <span>TheMcFreakery (McFreakery)</span>
+              <small>12 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-thewealthsocial" data-search="thewealthsocial ((will never reply here) (do not message)) copyright strike">
+              <span>thewealthsocial ((WILL NEVER REPLY HERE) (DO NOT MESSAGE))</span>
+              <small>5 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-honorable" data-search="honorable (honorable) appeal copyright denied disabled strike">
+              <span>honorable (Honorable)</span>
+              <small>6 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-richardconway" data-search="richardconway (richard) appeal copyright strike support">
+              <span>richardconway (Richard)</span>
+              <small>1 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-mrgusx" data-search="mrgusx (gus) appeal copyright strike">
+              <span>mrgusx (Gus)</span>
+              <small>8 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-mambascout" data-search="mambascout (mamba) appeal copyright strike">
+              <span>mambascout (Mamba)</span>
+              <small>1 exhibits / 4 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-vlatkovlad" data-search="vlatkovlad (vlatko vlad) appeal strike">
+              <span>vlatkovlad (Vlatko Vlad)</span>
+              <small>8 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-viraleader" data-search="viraleader (molagar) copyright">
+              <span>viraleader (Molagar)</span>
+              <small>0 exhibits / 1 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-Carvideos" data-search="carvideos (moe cv) appeal copyright denied disabled strike">
+              <span>Carvideos (Moe CV)</span>
+              <small>4 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-Ollehellman" data-search="ollehellman (olle hellman) appeal copyright strike">
+              <span>Ollehellman (Olle Hellman)</span>
+              <small>0 exhibits / 2 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-Serenity_Found" data-search="serenity_found (🌎) appeal copyright strike support">
+              <span>Serenity_Found (🌎)</span>
+              <small>1 exhibits / 4 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-LUXKAHN" data-search="luxkahn (lux) copyright strike">
+              <span>LUXKAHN (Lux)</span>
+              <small>0 exhibits / 1 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-amex" data-search="amex appeal">
+              <span>amex</span>
+              <small>4 exhibits / 3 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-LukeGosseling" data-search="lukegosseling (luke gosseling) appeal copyright strike">
+              <span>LukeGosseling (Luke Gosseling)</span>
+              <small>9 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-chunc" data-search="chunc (😂) appeal support">
+              <span>chunc (😂)</span>
+              <small>3 exhibits / 1 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-manojkumardahiya" data-search="manojkumardahiya (manoj) appeal copyright strike">
+              <span>manojkumardahiya (Manoj)</span>
+              <small>27 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-jacobv" data-search="jacobv (jacob) appeal copyright disabled strike support">
+              <span>jacobv (Jacob)</span>
+              <small>5 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-RudiR" data-search="rudir (rudi) copyright strike">
+              <span>RudiR (Rudi)</span>
+              <small>3 exhibits / 1 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-mehdiddi" data-search="mehdiddi (mehdi mustfa) appeal copyright disabled">
+              <span>mehdiddi (Mehdi Mustfa)</span>
+              <small>3 exhibits / 6 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-Louisgson" data-search="louisgson (louis gleeson) ">
+              <span>Louisgson (Louis Gleeson)</span>
+              <small>0 exhibits / 0 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-succylz" data-search="succylz (niko/succy 𝕏) disabled">
+              <span>succylz (Niko/SUCCY 𝕏)</span>
+              <small>1 exhibits / 1 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-Ovwen" data-search="ovwen (owen) strike">
+              <span>Ovwen (Owen)</span>
+              <small>0 exhibits / 1 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-Kahan-Modi" data-search="kahan modi appeal copyright strike">
+              <span>Kahan Modi</span>
+              <small>0 exhibits / 1 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-Visionwall" data-search="visionwall (alex (the.success.club) lombard) copyright strike">
+              <span>Visionwall (Alex (the.success.club) Lombard)</span>
+              <small>0 exhibits / 2 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-realasitgetshh" data-search="realasitgetshh (real as it gets) appeal copyright strike">
+              <span>realasitgetshh (Real As It Gets)</span>
+              <small>1 exhibits / 4 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-ralphklipper" data-search="ralphklipper appeal claimant copyright strike">
+              <span>ralphklipper</span>
+              <small>1 exhibits / 2 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-hamid_elmoussaoui" data-search="hamid_elmoussaoui (hamid elmoussaoui) appeal disabled restored support">
+              <span>hamid_elmoussaoui (Hamid Elmoussaoui)</span>
+              <small>3 exhibits / 3 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-igdann" data-search="igdann (dan) appeal support">
+              <span>igdann (Dan)</span>
+              <small>4 exhibits / 3 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-ivanelgrnde" data-search="ivanelgrnde (ivan) ">
+              <span>ivanelgrnde (Ivan)</span>
+              <small>0 exhibits / 1 messages</small>
+            </a>
+            
+            <a class="directory-row" href="#case-SocialMediaTrapLord" data-search="socialmediatraplord (social media trap lord) copyright strike">
+              <span>SocialMediaTrapLord (Social Media Trap Lord)</span>
+              <small>0 exhibits / 1 messages</small>
+            </a>
+            
+          </div>
+        </section>
+      </aside>
+      <section id="cases" aria-label="Member cases">
+        
+      <article class="case" id="case-TheMcFreakery" data-search="themcfreakery mcfreakery copyright strike reported waves of false copyright strikes against @mcfreakery, account takedown, and demands for money to remove strikes or restore the account. hey guys i’ll share my story! i’ve been posting on my page @ mcfreakery since september 2024. about nine months ago, i started getting some copyright strikes. which was confusing because when i know where the video came from, i always ask for permission. and i was getting stricken on these posts that i asked for permission to repost. following up to recently, this exploit has gotten a lot worse and this person/group was targeting my page with waves of false copyright strikes, and ended up getting my page taken down. they then were demanding for money to remove the strikes and restore my account. (i’ll send all the screenshots shots below) i obviously didn’t pay them, i made a whole video about it instead and i’ve seemed to have gotten a lot of big creators attention. which led to this group chat being made. our government does not care about no damn copyright rn 💀💀 i thought whitelisting only protected you from other strikes did he just say @ wealth strikes ppl too? i’d be happy completely shutting down the copyright strike scheme and being able to make money from my page as normal 😭 my main account was suspended for cse            ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>TheMcFreakery (McFreakery)</h2>
+          </div>
+          <a class="jump-link" href="#case-TheMcFreakery">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>12 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>copyright</span><span>strike</span></div>
+        <p class="summary">Reported waves of false copyright strikes against @mcfreakery, account takedown, and demands for money to remove strikes or restore the account.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-05 message 39</span>
+          <p>Hey guys i’ll share my story! I’ve been posting on my page @ mcfreakery since september 2024. About nine months ago, I started getting some copyright strikes. Which was confusing because when I know where the video came from, I always ask for permission. and I was getting stricken on these posts that I asked for permission to repost. Following up to recently, this exploit has gotten a lot worse and this person/group was targeting my page with waves of false copyright strikes, and ended up getting my page taken down. They then were demanding for money to remove the strikes and restore my account. (I’ll send all the screenshots shots below) I obviously didn’t pay them, I made a whole video about it instead and I’ve seemed to have gotten a lot of big creators attention. Which led to this group chat being made.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 132</span>
+          <p>our government does NOT care about no damn copyright rn 💀💀</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 145</span>
+          <p>I thought whitelisting only protected you from other strikes</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 302</span>
+          <p>did he just say @ wealth strikes ppl too?</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-11 message 930</span>
+          <p>i’d be happy completely shutting down the copyright strike scheme and being able to make money from my page as normal 😭</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-16 message 1097</span>
+          <p>My main account was suspended for CSE</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li><a href="https://www.instagram.com/p/DYFo_7xjRlR/?igsh=MXRrNW4wcnI3MHNnNQ==" target="_blank" rel="noopener">https://www.instagram.com/p/DYFo_7xjRlR/?igsh=MXRrNW4wcnI3MHNnNQ==</a></li>
+<li><a href="https://www.instagram.com/reel/DXuyW4Vie8N/?igsh=MWlrNDgybzB1NXJzeA==" target="_blank" rel="noopener">https://www.instagram.com/reel/DXuyW4Vie8N/?igsh=MWlrNDgybzB1NXJzeA==</a></li>
+<li><a href="https://www.instagram.com/reel/DYC2gPKJQIC/?igsh=MTlrOTlhODFrd2g5bQ==" target="_blank" rel="noopener">https://www.instagram.com/reel/DYC2gPKJQIC/?igsh=MTlrOTlhODFrd2g5bQ==</a></li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-05_msg-40_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-05_msg-40_TheMcFreakery_photo.jpg" alt="2026-05-05 message 40 (photo)"></a>
+        <div class="exhibit-meta">2026-05-05 message 40 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-05_msg-40_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-05_msg-41_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-05_msg-41_TheMcFreakery_photo.jpg" alt="2026-05-05 message 41 (photo)"></a>
+        <div class="exhibit-meta">2026-05-05 message 41 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-05_msg-41_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-05_msg-42_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-05_msg-42_TheMcFreakery_photo.jpg" alt="2026-05-05 message 42 (photo)"></a>
+        <div class="exhibit-meta">2026-05-05 message 42 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-05_msg-42_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-05_msg-43_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-05_msg-43_TheMcFreakery_photo.jpg" alt="2026-05-05 message 43 (photo)"></a>
+        <div class="exhibit-meta">2026-05-05 message 43 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-05_msg-43_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-05_msg-44_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-05_msg-44_TheMcFreakery_photo.jpg" alt="2026-05-05 message 44 (photo)"></a>
+        <div class="exhibit-meta">2026-05-05 message 44 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-05_msg-44_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-05_msg-45_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-05_msg-45_TheMcFreakery_photo.jpg" alt="2026-05-05 message 45 (photo)"></a>
+        <div class="exhibit-meta">2026-05-05 message 45 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-05_msg-45_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-06_msg-85_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-06_msg-85_TheMcFreakery_photo.jpg" alt="2026-05-06 message 85 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 85 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-06_msg-85_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <video controls preload="metadata" src="evidence-files/TheMcFreakery/2026-05-07_msg-365_TheMcFreakery_video.MOV"></video>
+        <div class="exhibit-meta">2026-05-07 message 365 (video)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-07_msg-365_TheMcFreakery_video.MOV" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <video controls preload="metadata" src="evidence-files/TheMcFreakery/2026-05-07_msg-374_TheMcFreakery_video.MOV"></video>
+        <div class="exhibit-meta">2026-05-07 message 374 (video)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-07_msg-374_TheMcFreakery_video.MOV" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <video controls preload="metadata" src="evidence-files/TheMcFreakery/2026-05-07_msg-430_TheMcFreakery_video.MP4"></video>
+        <div class="exhibit-meta">2026-05-07 message 430 (video)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-07_msg-430_TheMcFreakery_video.MP4" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-16_msg-1095_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-16_msg-1095_TheMcFreakery_photo.jpg" alt="2026-05-16 message 1095 (photo)"></a>
+        <div class="exhibit-meta">2026-05-16 message 1095 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-16_msg-1095_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/TheMcFreakery/2026-05-16_msg-1096_TheMcFreakery_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/TheMcFreakery/2026-05-16_msg-1096_TheMcFreakery_photo.jpg" alt="2026-05-16 message 1096 (photo)"></a>
+        <div class="exhibit-meta">2026-05-16 message 1096 (photo)</div>
+        <a class="open-link" href="evidence-files/TheMcFreakery/2026-05-16_msg-1096_TheMcFreakery_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-thewealthsocial" data-search="thewealthsocial (will never reply here) (do not message) copyright strike reported ongoing fake copyright strikes, frequent reports from impacted creators, expansion into photos, and persistent compliance burden despite strong meta access. is anyone still dealing with fake strikes or they’ve slowed down? the account integrity one is so odd i am as in as you get with them, and even then their help is kinda useless. our account will never be deleted but we still have constant compliance with them which is a huge waste of time every time there’s a fake strike. i’ve talked to them before they don’t even have $50 to their name and filing copyrights take 2 minutes max they just do it constantly violate copyright constantly not only they steal movie clips but they steal from creators too i warned him 4 times to stop over the course of 18 months then started copyrighting that doesn’t stop fake copyrights     ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>thewealthsocial ((WILL NEVER REPLY HERE) (DO NOT MESSAGE))</h2>
+          </div>
+          <a class="jump-link" href="#case-thewealthsocial">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>5 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>copyright</span><span>strike</span></div>
+        <p class="summary">Reported ongoing fake copyright strikes, frequent reports from impacted creators, expansion into photos, and persistent compliance burden despite strong Meta access.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-06 message 50</span>
+          <p>Is anyone still dealing with fake strikes or they’ve slowed down? The account integrity one is so odd</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 67</span>
+          <p>I am as in as you get with them, and even then their help is kinda useless. Our account will never be deleted but we still have constant compliance with them which is a huge waste of time every time there’s a fake strike.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 92</span>
+          <p>I’ve talked to them before They don’t even have $50 to their name and filing copyrights take 2 minutes max They just do it constantly</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 138</span>
+          <p>Violate copyright constantly</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 141</span>
+          <p>Not only they steal movie clips but they steal from creators too I warned him 4 times to stop over the course of 18 months then started copyrighting</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 148</span>
+          <p>That doesn’t stop fake copyrights</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/thewealthsocial/2026-06-05_msg-1445_thewealthsocial_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/thewealthsocial/2026-06-05_msg-1445_thewealthsocial_photo.jpg" alt="2026-06-05 message 1445 (photo)"></a>
+        <div class="exhibit-meta">2026-06-05 message 1445 (photo)</div>
+        <a class="open-link" href="evidence-files/thewealthsocial/2026-06-05_msg-1445_thewealthsocial_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/thewealthsocial/2026-06-05_msg-1446_thewealthsocial_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/thewealthsocial/2026-06-05_msg-1446_thewealthsocial_photo.jpg" alt="2026-06-05 message 1446 (photo)"></a>
+        <div class="exhibit-meta">2026-06-05 message 1446 (photo)</div>
+        <a class="open-link" href="evidence-files/thewealthsocial/2026-06-05_msg-1446_thewealthsocial_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/thewealthsocial/2026-06-05_msg-1447_thewealthsocial_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/thewealthsocial/2026-06-05_msg-1447_thewealthsocial_photo.jpg" alt="2026-06-05 message 1447 (photo)"></a>
+        <div class="exhibit-meta">2026-06-05 message 1447 (photo)</div>
+        <a class="open-link" href="evidence-files/thewealthsocial/2026-06-05_msg-1447_thewealthsocial_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/thewealthsocial/2026-06-05_msg-1448_thewealthsocial_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/thewealthsocial/2026-06-05_msg-1448_thewealthsocial_photo.jpg" alt="2026-06-05 message 1448 (photo)"></a>
+        <div class="exhibit-meta">2026-06-05 message 1448 (photo)</div>
+        <a class="open-link" href="evidence-files/thewealthsocial/2026-06-05_msg-1448_thewealthsocial_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/thewealthsocial/2026-06-05_msg-1449_thewealthsocial_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/thewealthsocial/2026-06-05_msg-1449_thewealthsocial_photo.jpg" alt="2026-06-05 message 1449 (photo)"></a>
+        <div class="exhibit-meta">2026-06-05 message 1449 (photo)</div>
+        <a class="open-link" href="evidence-files/thewealthsocial/2026-06-05_msg-1449_thewealthsocial_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-honorable" data-search="honorable honorable appeal copyright denied disabled strike reported false strikes against @futuretech and @robert, including a strike on a personal elephant photo and unresolved viralhog-related claims despite permission and a paid retraction process. i am still dealing with fake strikes. i got fake strikes that took @futuretech down, and i have one currently on my personal account @robert which is crazy, for a photo of me with an elephant totally understand the feeling of fragility. all my accounts now feel fragile when they were as strong as possilbe before, never a single strike on futuretech for example, and then suddenly 3 in the course of a couple weeks. we can get a story published for sure and basically use it to let men know what’s going on here, but that might not solve any problems at all and if it does, it might just help the fake copyrights. i’m not sure if it will help everything. we really need to document all of the issues that we are dealing with. that’s definitely a good idea, but obviously there are more problems that we are dealing with than just fake copyrights that’s what i would’ve thought! how the hell does that not stop the fake copyright i can’t get the proof now because i can’t get into my futuretech account, but i have multiple copyrights on my account due to viralhog, despite having permission from the owner of the clip. additionally, i paid a $420 fee to viral hog, where they were supposed to retract the copyright claim. they claimed to do so, and yet the copyright remained on my account and remains on my account to this day. ok, well we certainly can do this.   conversation i’m having today were you getting a lot of notifications like this? i did have a copyright against a photos of me and an elephant by this guy  insane, i tagged meta and asked him to fix the issue and it blocked my comment. no one else can see it has anyone seen this one? this seems to be a new one. can’t even get access to my futuretech account.">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>honorable (Honorable)</h2>
+          </div>
+          <a class="jump-link" href="#case-honorable">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>6 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>denied</span><span>disabled</span><span>strike</span></div>
+        <p class="summary">Reported false strikes against @futuretech and @robert, including a strike on a personal elephant photo and unresolved ViralHog-related claims despite permission and a paid retraction process.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-06 message 54</span>
+          <p>I am still dealing with fake strikes. I got fake strikes that took @futuretech down, and I have one currently on my personal account @robert which is crazy, for a photo of me with an elephant</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 58</span>
+          <p>Totally understand the feeling of fragility. All my accounts now feel fragile when they were as strong as possilbe before, never a single strike on futuretech for example, and then suddenly 3 in the course of a couple weeks.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 106</span>
+          <p>We can get a story published for sure and basically use it to let men know what’s going on here, but that might not solve any problems at all and if it does, it might just help the fake copyrights. I’m not sure if it will help everything. We really need to document all of the issues that we are dealing with.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 115</span>
+          <p>That’s definitely a good idea, but obviously there are more problems that we are dealing with than just fake copyrights</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 155</span>
+          <p>that’s what I would’ve thought! How the hell does that not stop the fake copyright</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 291</span>
+          <p>I can’t get the proof now because I can’t get into my Futuretech account, but I have multiple copyrights on my account due to viralhog, despite having permission from the owner of the clip. Additionally, I paid a $420 fee to viral hog, where they were supposed to retract the copyright claim. They claimed to do so, and yet the copyright remained on My Account and remains on My Account to this day.</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>attachment:photo</li>
+<li><a href="https://www.instagram.com/reel/DYNktcIyx80/?igsh=MTJpeXZtNWM4azlqMw==" target="_blank" rel="noopener">https://www.instagram.com/reel/DYNktcIyx80/?igsh=MTJpeXZtNWM4azlqMw==</a></li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/honorable/2026-05-06_msg-94_honorable_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/honorable/2026-05-06_msg-94_honorable_photo.jpg" alt="2026-05-06 message 94 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 94 (photo)</div>
+        <a class="open-link" href="evidence-files/honorable/2026-05-06_msg-94_honorable_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">OK, well we certainly can do this. Conversation I’m having today</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/honorable/2026-05-06_msg-264_honorable_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/honorable/2026-05-06_msg-264_honorable_photo.jpg" alt="2026-05-06 message 264 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 264 (photo)</div>
+        <a class="open-link" href="evidence-files/honorable/2026-05-06_msg-264_honorable_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Were you getting a lot of notifications like this?</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/honorable/2026-05-06_msg-300_honorable_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/honorable/2026-05-06_msg-300_honorable_photo.jpg" alt="2026-05-06 message 300 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 300 (photo)</div>
+        <a class="open-link" href="evidence-files/honorable/2026-05-06_msg-300_honorable_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">I did have a copyright against a photos of me and an elephant by this guy</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/honorable/2026-05-06_msg-308_honorable_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/honorable/2026-05-06_msg-308_honorable_photo.jpg" alt="2026-05-06 message 308 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 308 (photo)</div>
+        <a class="open-link" href="evidence-files/honorable/2026-05-06_msg-308_honorable_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/honorable/2026-05-07_msg-448_honorable_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/honorable/2026-05-07_msg-448_honorable_photo.jpg" alt="2026-05-07 message 448 (photo)"></a>
+        <div class="exhibit-meta">2026-05-07 message 448 (photo)</div>
+        <a class="open-link" href="evidence-files/honorable/2026-05-07_msg-448_honorable_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Insane, I tagged Meta and asked him to fix the issue and it blocked my comment. No one else can see it</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/honorable/2026-05-08_msg-514_honorable_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/honorable/2026-05-08_msg-514_honorable_photo.jpg" alt="2026-05-08 message 514 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 514 (photo)</div>
+        <a class="open-link" href="evidence-files/honorable/2026-05-08_msg-514_honorable_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Has anyone seen this one? This seems to be a new one. Can’t even get access to my Futuretech account.</div>
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-richardconway" data-search="richardconway richard appeal copyright strike support reported 10 false strikes in one week from hotmail addresses impersonating rights holders, account suspension, a two-week appeal recovery, and weak meta verified max support. my account was suspended for copyright infringement after receiving 10 strikes over one week. they were all fake and impersonating the alleged rights holders using hotmail email addresses. i appealed and managed to get the account back but it took exactly 2 weeks. still seems very fragile and worrying that it might happen again. we decided to archive all of our reels as a precaution and i&#x27;ve noticed a few other accounts doing the same. across the 10 strikes, only 2 hotmail addresses were used. from the first part of the email addresses, i found 2 instagram usernames that were a virtual match and i wondered if they had made the false claims. the email addresses were monsbayofficial@hotmail.com and f1teamhl@hotmail.com. i&#x27;m not sure if they have done the same to other accounts. i didn&#x27;t receive any blackmail style messages like some people have mentioned. also, i had meta verified max which i expected to give superior support at around $400 a month but it seems it&#x27;s the same support team as standard verification and they literally can&#x27;t do anything other than tell you to appeal. it&#x27;s absolutely rubbish. my feeling is that maybe if this could get some media attention, it would do more than trying to contact meta directly. all we would need is a large respected publication to do an article. we could get a pr company to write and distribute a news release along the lines of: &gt; some of instagram&#x27;s biggest creators have joined forces after claiming they have been under attack from bad actors making false copyright claims, causing content to be removed and their accounts suspended. the meta creators alliance has members with a total instagram following of over xx million. members say that it appears to be incredibly easy for anyone to make a false copyright claim to remove content and even permanently ban accounts. they say meta have done little to help and even verified members paying as much as $400 a month for support and not being listened to. .... then a few examples of some of the accounts etc. i think this is an interesting story that could potentially get a lot of media attention. my feeling is that maybe if this could get some media attention, it would do more than trying to contact meta directly. all we would need is a large respected publication to do an article. we could get a pr company to write and distribute a news release along the lines of: &gt; some of instagram&#x27;s biggest creators have joined forces after claiming they have been under attack from bad actors making false copyright claims, causing content to be removed and their accounts suspended. the meta creators alliance has members with a total instagram following of over xx million. members say that it appears to be incredibly easy for anyone to make a false copyright claim to remove content and even permanently ban accounts. they say meta have done little to help and even verified members paying as much as $400 a month for support are not being listened to. .... then a few examples of some of the accounts etc. i think this is an interesting story that could potentially get a lot of media attention. it&#x27;s ridiculous that they don&#x27;t listen or care even when it comes from an account the size of yours. the whole copyright strike system is badly designed and clearly very open to abuse. a large percentage of the content on instagram is probably shared in some way from a third party. that&#x27;s the whole point of social, viral content. most content creators want it to be shared and to reach a wider audience as long as they are credited. there majority of big creators who share content always mention where the media has originated from. some of my fake claims were allegedly from large organizations like ferrari and lewis hamilton. these type of brands want exposure and don&#x27;t care. meta have invested so much money in ai but can&#x27;t automatically detect that claim allegedly from ferrari using a hotmail email address isn&#x27;t suspicious. it&#x27;s the same with all the spam dm messages you get on facebook and instagram. how they let some of those through is unbelievable when most of them are easily detectable. does anyone get this kind of response to a copyright appeal? it doesn&#x27;t make a lot of sense but the strike seems to be removed once this email arrives.">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>richardconway (Richard)</h2>
+          </div>
+          <a class="jump-link" href="#case-richardconway">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>1 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span><span>support</span></div>
+        <p class="summary">Reported 10 false strikes in one week from Hotmail addresses impersonating rights holders, account suspension, a two-week appeal recovery, and weak Meta Verified Max support.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-06 message 56</span>
+          <p>My account was suspended for copyright infringement after receiving 10 strikes over one week. They were all fake and impersonating the alleged Rights Holders using hotmail email addresses. I appealed and managed to get the account back but it took exactly 2 weeks. Still seems very fragile and worrying that it might happen again. We decided to archive all of our reels as a precaution and I&#x27;ve noticed a few other accounts doing the same.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 59</span>
+          <p>Across the 10 strikes, only 2 hotmail addresses were used. From the first part of the email addresses, I found 2 Instagram usernames that were a virtual match and I wondered if they had made the false claims. The email addresses were monsbayofficial@hotmail.com and f1teamhl@hotmail.com. I&#x27;m not sure if they have done the same to other accounts. I didn&#x27;t receive any blackmail style messages like some people have mentioned.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 62</span>
+          <p>Also, I had Meta Verified Max which I expected to give superior support at around $400 a month but it seems it&#x27;s the same support team as standard verification and they literally can&#x27;t do anything other than tell you to appeal. It&#x27;s absolutely rubbish.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 64</span>
+          <p>My feeling is that maybe if this could get some media attention, it would do more than trying to contact Meta directly. All we would need is a large respected publication to do an article. We could get a PR company to write and distribute a news release along the lines of: &gt; Some of Instagram&#x27;s biggest creators have joined forces after claiming they have been under attack from bad actors making false copyright claims, causing content to be removed and their accounts suspended. The Meta Creators Alliance has members with a total Instagram following of over xx million. Members say that it appears to be incredibly easy for anyone to make a false copyright claim to remove content and even permanently ban accounts. They say Meta have done little to help and even verified members paying as much as $400 a month for support and not being listened to. .... then a few examples of some of the accounts etc. I think this is an interesting story that could potentially get a lot of media attention.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 64</span>
+          <p>My feeling is that maybe if this could get some media attention, it would do more than trying to contact Meta directly. All we would need is a large respected publication to do an article. We could get a PR company to write and distribute a news release along the lines of: &gt; Some of Instagram&#x27;s biggest creators have joined forces after claiming they have been under attack from bad actors making false copyright claims, causing content to be removed and their accounts suspended. The Meta Creators Alliance has members with a total Instagram following of over xx million. Members say that it appears to be incredibly easy for anyone to make a false copyright claim to remove content and even permanently ban accounts. They say Meta have done little to help and even verified members paying as much as $400 a month for support are not being listened to. .... then a few examples of some of the accounts etc. I think this is an interesting story that could potentially get a lot of media attention.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 68</span>
+          <p>It&#x27;s ridiculous that they don&#x27;t listen or care even when it comes from an account the size of yours. The whole copyright strike system is badly designed and clearly very open to abuse. A large percentage of the content on Instagram is probably shared in some way from a third party. That&#x27;s the whole point of social, viral content. Most content creators want it to be shared and to reach a wider audience as long as they are credited. There majority of big creators who share content always mention where the media has originated from. Some of my fake claims were allegedly from large organizations like Ferrari and Lewis Hamilton. These type of brands want exposure and don&#x27;t care. Meta have invested so much money in AI but can&#x27;t automatically detect that claim allegedly from Ferrari using a hotmail email address isn&#x27;t suspicious. It&#x27;s the same with all the spam DM messages you get on Facebook and Instagram. How they let some of those through is unbelievable when most of them are easily detectable.</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>attachment:photo</li>
+<li><a href="https://www.instagram.com/reel/DYSOY_DBkKN/" target="_blank" rel="noopener">https://www.instagram.com/reel/DYSOY_DBkKN/</a></li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/richardconway/2026-05-06_msg-214_richardconway_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/richardconway/2026-05-06_msg-214_richardconway_photo.jpg" alt="2026-05-06 message 214 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 214 (photo)</div>
+        <a class="open-link" href="evidence-files/richardconway/2026-05-06_msg-214_richardconway_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Does anyone get this kind of response to a copyright appeal? It doesn&#x27;t make a lot of sense but the strike seems to be removed once this email arrives.</div>
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-mrgusx" data-search="mrgusx gus appeal copyright strike reported a year-long fake copyright problem affecting @liveforclass and related pages, daily strikes, and a need to delete reels or shift to ai content. here’s a few of my ideas to fix/prevent it. - you have to be logged in to the account you are striking the original picture from - you get the change to appeal a strike before it even hits - you can only send strikes from cooperate emails - or simply fix the fucking ai or add staff onto it i think the overall us law needs to change about copyright anyway copyright shouldn’t even be a thing anymore 😂 i’ve had my account for 10 years, not 1 strike until last year and i’ve never been reached out to hey guys, i’m brenden i own @liveforclass. i have been going through this fake copyright issue for a year now. i also own 2 other pages where they have striked me in the live for class name an email - even though i own the account lmao. i’ve had to delete all reels, and go pretty much 100% ai content just to decrease the chances of getting a strike. thanks for the group chat and working with us to fix this ❤️ hey guys, i’m brenden i own @liveforclass. i have been going through this fake copyright issue for a year now. i also own 2 other pages where they have striked me in the live for class name and email - even though i own the account lmao. i’ve had to delete all reels, and go pretty much 100% ai content just to decrease the chances of getting a strike. thanks for the group chat and working with us to fix this ❤️        ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>mrgusx (Gus)</h2>
+          </div>
+          <a class="jump-link" href="#case-mrgusx">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>8 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span></div>
+        <p class="summary">Reported a year-long fake copyright problem affecting @liveforclass and related pages, daily strikes, and a need to delete reels or shift to AI content.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-06 message 117</span>
+          <p>Here’s a few of my ideas to fix/prevent it. - You have to be logged in to the account you are striking the original picture from - You get the change to appeal a strike before it even hits - you can only send strikes from cooperate emails - or simply fix the fucking AI or add staff onto it</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 129</span>
+          <p>I think the overall US law needs to change about copyright anyway</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 131</span>
+          <p>Copyright shouldn’t even be a thing anymore 😂</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 204</span>
+          <p>I’ve had my account for 10 years, not 1 strike until last year and I’ve never been reached out to</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 475</span>
+          <p>Hey guys, I’m Brenden I own @liveforclass. I have been going through this fake copyright issue for a year now. I also own 2 other pages where they have striked me in the Live For Class name an email - even though I own the account lmao. I’ve had to delete all reels, and go pretty much 100% AI content just to decrease the chances of getting a strike. Thanks for the group chat and working with us to fix this ❤️</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 475</span>
+          <p>Hey guys, I’m Brenden I own @liveforclass. I have been going through this fake copyright issue for a year now. I also own 2 other pages where they have striked me in the Live For Class name and email - even though I own the account lmao. I’ve had to delete all reels, and go pretty much 100% AI content just to decrease the chances of getting a strike. Thanks for the group chat and working with us to fix this ❤️</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>id:101778941644760</li>
+<li><a href="https://www.hindustantimes.com/cities/lucknow-news/fraudsters-use-fake-copyright-strikes-to-extort-lucknow-based-instagram-page-admin-101778941644760-amp.html" target="_blank" rel="noopener">https://www.hindustantimes.com/cities/lucknow-news/fraudsters-use-fake-copyright-strikes-to-extort-lucknow-based-instagram-page-admin-101778941644760-amp.html</a></li>
+<li><a href="https://www.instagram.com/p/DYAM2MvAuwf/?igsh=MTJpNDlvazg0M3FwZQ==" target="_blank" rel="noopener">https://www.instagram.com/p/DYAM2MvAuwf/?igsh=MTJpNDlvazg0M3FwZQ==</a></li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/mrgusx/2026-05-08_msg-573_mrgusx_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mrgusx/2026-05-08_msg-573_mrgusx_photo.jpg" alt="2026-05-08 message 573 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 573 (photo)</div>
+        <a class="open-link" href="evidence-files/mrgusx/2026-05-08_msg-573_mrgusx_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/mrgusx/2026-05-08_msg-574_mrgusx_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mrgusx/2026-05-08_msg-574_mrgusx_photo.jpg" alt="2026-05-08 message 574 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 574 (photo)</div>
+        <a class="open-link" href="evidence-files/mrgusx/2026-05-08_msg-574_mrgusx_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/mrgusx/2026-05-08_msg-575_mrgusx_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mrgusx/2026-05-08_msg-575_mrgusx_photo.jpg" alt="2026-05-08 message 575 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 575 (photo)</div>
+        <a class="open-link" href="evidence-files/mrgusx/2026-05-08_msg-575_mrgusx_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/mrgusx/2026-05-09_msg-664_mrgusx_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mrgusx/2026-05-09_msg-664_mrgusx_photo.jpg" alt="2026-05-09 message 664 (photo)"></a>
+        <div class="exhibit-meta">2026-05-09 message 664 (photo)</div>
+        <a class="open-link" href="evidence-files/mrgusx/2026-05-09_msg-664_mrgusx_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/mrgusx/2026-05-21_msg-1143_mrgusx_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mrgusx/2026-05-21_msg-1143_mrgusx_photo.jpg" alt="2026-05-21 message 1143 (photo)"></a>
+        <div class="exhibit-meta">2026-05-21 message 1143 (photo)</div>
+        <a class="open-link" href="evidence-files/mrgusx/2026-05-21_msg-1143_mrgusx_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/mrgusx/2026-05-21_msg-1152_mrgusx_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mrgusx/2026-05-21_msg-1152_mrgusx_photo.jpg" alt="2026-05-21 message 1152 (photo)"></a>
+        <div class="exhibit-meta">2026-05-21 message 1152 (photo)</div>
+        <a class="open-link" href="evidence-files/mrgusx/2026-05-21_msg-1152_mrgusx_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <video controls preload="metadata" src="evidence-files/mrgusx/2026-05-26_msg-1364_mrgusx_video.MP4"></video>
+        <div class="exhibit-meta">2026-05-26 message 1364 (video)</div>
+        <a class="open-link" href="evidence-files/mrgusx/2026-05-26_msg-1364_mrgusx_video.MP4" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/mrgusx/2026-06-06_msg-1469_mrgusx_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mrgusx/2026-06-06_msg-1469_mrgusx_photo.jpg" alt="2026-06-06 message 1469 (photo)"></a>
+        <div class="exhibit-meta">2026-06-06 message 1469 (photo)</div>
+        <a class="open-link" href="evidence-files/mrgusx/2026-06-06_msg-1469_mrgusx_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-mambascout" data-search="mambascout mamba appeal copyright strike i had a friend who collected fake copyright strike cases and sent meta a legal threat and had all of those strikes retracted. will invite him to the gc i had a friend who collected fake copyright strike cases and sent meta a legal threat and had all of those strikes retracted. will invite him to the gc what about community guideline strikes? do you ever get them? if you receive this response that means the strike is removed from the backend do not appeal again ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>mambascout (Mamba)</h2>
+          </div>
+          <a class="jump-link" href="#case-mambascout">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>1 exhibits</span>
+          <span>4 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span></div>
+        <p class="summary">I had a friend who collected fake copyright strike cases and sent meta a legal threat and had all of those strikes retracted. Will invite him to the gc</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-06 message 144</span>
+          <p>I had a friend who collected fake copyright strike cases and sent meta a legal threat and had all of those strikes retracted. Will invite him to the gc</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 165</span>
+          <p>What about community guideline strikes? Do you ever get them?</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 215</span>
+          <p>If you receive this response that means the strike is removed from the backend</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-21 message 1161</span>
+          <p>Do not appeal again</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/mambascout/2026-05-22_msg-1194_mambascout_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mambascout/2026-05-22_msg-1194_mambascout_photo.jpg" alt="2026-05-22 message 1194 (photo)"></a>
+        <div class="exhibit-meta">2026-05-22 message 1194 (photo)</div>
+        <a class="open-link" href="evidence-files/mambascout/2026-05-22_msg-1194_mambascout_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-vlatkovlad" data-search="vlatkovlad vlatko vlad appeal strike they couldnt send strikes they couldnt send strikes i had 0 strikes 0 broken rules coz i appealed right away maybe i rushed to have appealed? appealed on any or just waiting? its not suspended        ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>vlatkovlad (Vlatko Vlad)</h2>
+          </div>
+          <a class="jump-link" href="#case-vlatkovlad">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>8 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>strike</span></div>
+        <p class="summary">They couldnt send strikes</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-06 message 239</span>
+          <p>They couldnt send strikes</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-06 message 240</span>
+          <p>I had 0 strikes 0 broken rules</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 492</span>
+          <p>Coz i appealed right away</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 497</span>
+          <p>Maybe I rushed to have appealed?</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-22 message 1219</span>
+          <p>Appealed on any or just waiting?</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-22 message 1255</span>
+          <p>Its not suspended</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/vlatkovlad/2026-05-06_msg-53_vlatkovlad_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/vlatkovlad/2026-05-06_msg-53_vlatkovlad_photo.jpg" alt="2026-05-06 message 53 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 53 (photo)</div>
+        <a class="open-link" href="evidence-files/vlatkovlad/2026-05-06_msg-53_vlatkovlad_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/vlatkovlad/2026-05-06_msg-245_vlatkovlad_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/vlatkovlad/2026-05-06_msg-245_vlatkovlad_photo.jpg" alt="2026-05-06 message 245 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 245 (photo)</div>
+        <a class="open-link" href="evidence-files/vlatkovlad/2026-05-06_msg-245_vlatkovlad_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/vlatkovlad/2026-05-06_msg-267_vlatkovlad_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/vlatkovlad/2026-05-06_msg-267_vlatkovlad_photo.jpg" alt="2026-05-06 message 267 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 267 (photo)</div>
+        <a class="open-link" href="evidence-files/vlatkovlad/2026-05-06_msg-267_vlatkovlad_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/vlatkovlad/2026-05-06_msg-268_vlatkovlad_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/vlatkovlad/2026-05-06_msg-268_vlatkovlad_photo.jpg" alt="2026-05-06 message 268 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 268 (photo)</div>
+        <a class="open-link" href="evidence-files/vlatkovlad/2026-05-06_msg-268_vlatkovlad_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/vlatkovlad/2026-05-06_msg-269_vlatkovlad_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/vlatkovlad/2026-05-06_msg-269_vlatkovlad_photo.jpg" alt="2026-05-06 message 269 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 269 (photo)</div>
+        <a class="open-link" href="evidence-files/vlatkovlad/2026-05-06_msg-269_vlatkovlad_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/vlatkovlad/2026-05-22_msg-1259_vlatkovlad_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/vlatkovlad/2026-05-22_msg-1259_vlatkovlad_photo.jpg" alt="2026-05-22 message 1259 (photo)"></a>
+        <div class="exhibit-meta">2026-05-22 message 1259 (photo)</div>
+        <a class="open-link" href="evidence-files/vlatkovlad/2026-05-22_msg-1259_vlatkovlad_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/vlatkovlad/2026-05-22_msg-1270_vlatkovlad_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/vlatkovlad/2026-05-22_msg-1270_vlatkovlad_photo.jpg" alt="2026-05-22 message 1270 (photo)"></a>
+        <div class="exhibit-meta">2026-05-22 message 1270 (photo)</div>
+        <a class="open-link" href="evidence-files/vlatkovlad/2026-05-22_msg-1270_vlatkovlad_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/vlatkovlad/2026-05-23_msg-1289_vlatkovlad_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/vlatkovlad/2026-05-23_msg-1289_vlatkovlad_photo.jpg" alt="2026-05-23 message 1289 (photo)"></a>
+        <div class="exhibit-meta">2026-05-23 message 1289 (photo)</div>
+        <a class="open-link" href="evidence-files/vlatkovlad/2026-05-23_msg-1289_vlatkovlad_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-viraleader" data-search="viraleader molagar copyright i also received a copyright warning, but i can&#x27;t find it anywhere. i didn&#x27;t receive an email, and i don&#x27;t see it in my account status either. i also received a copyright warning, but i can&#x27;t find it anywhere. i didn&#x27;t receive an email, and i don&#x27;t see it in my account status either. ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>viraleader (Molagar)</h2>
+          </div>
+          <a class="jump-link" href="#case-viraleader">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        <div class="chips"><span>copyright</span></div>
+        <p class="summary">I also received a copyright warning, but I can&#x27;t find it anywhere. I didn&#x27;t receive an email, and I don&#x27;t see it in my account status either.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-06 message 282</span>
+          <p>I also received a copyright warning, but I can&#x27;t find it anywhere. I didn&#x27;t receive an email, and I don&#x27;t see it in my account status either.</p>
+        </li>
+        </ul>
+        
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      <article class="case" id="case-Carvideos" data-search="carvideos moe cv appeal copyright denied disabled strike reported losing multiple pages to copyright strikes and integrity bans, long-running harassment, extortion or retraction payments, and suspected meta rights manager abuse. how many here affected with copyright reports? strictly no remove fully ai just say they found a exploit in instagram &amp; facebooks copyright and intellectual property report system where they can take any post down even if it’s not owned by the reporter as if it’s owned by them which means they can target anyone and no one is safe from fraudulent copyright reports life after losing 4 pages to copyright strikes and integrity bans 😂 if anyone here banned for copyright message me im testing something 50% chance your account comes back testing a method for copyright restoration just helped @themcfreakery with something so i wanna test it for someone who’s banned for copyright to see what’s up    ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>Carvideos (Moe CV)</h2>
+          </div>
+          <a class="jump-link" href="#case-Carvideos">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>4 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>denied</span><span>disabled</span><span>strike</span></div>
+        <p class="summary">Reported losing multiple pages to copyright strikes and integrity bans, long-running harassment, extortion or retraction payments, and suspected Meta Rights Manager abuse.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-07 message 349</span>
+          <p>How many here affected with copyright reports? Strictly</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 369</span>
+          <p>No remove fully ai just say they found a exploit in Instagram &amp; facebooks copyright and intellectual property report system where they can take any post down even if it’s not owned by the reporter as if it’s owned by them which means they can target anyone and no one is safe from fraudulent copyright reports</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 372</span>
+          <p>Life after losing 4 pages to copyright strikes and integrity bans 😂</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 380</span>
+          <p>If anyone here banned for copyright message me im testing something</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 381</span>
+          <p>50% chance your account comes back testing a method for copyright restoration</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 384</span>
+          <p>Just helped @TheMcFreakery with something so I wanna test it for someone who’s banned for copyright to see what’s up</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/Carvideos/2026-05-06_msg-294_Carvideos_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/Carvideos/2026-05-06_msg-294_Carvideos_photo.jpg" alt="2026-05-06 message 294 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 294 (photo)</div>
+        <a class="open-link" href="evidence-files/Carvideos/2026-05-06_msg-294_Carvideos_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/Carvideos/2026-05-06_msg-295_Carvideos_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/Carvideos/2026-05-06_msg-295_Carvideos_photo.jpg" alt="2026-05-06 message 295 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 295 (photo)</div>
+        <a class="open-link" href="evidence-files/Carvideos/2026-05-06_msg-295_Carvideos_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/Carvideos/2026-05-06_msg-296_Carvideos_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/Carvideos/2026-05-06_msg-296_Carvideos_photo.jpg" alt="2026-05-06 message 296 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 296 (photo)</div>
+        <a class="open-link" href="evidence-files/Carvideos/2026-05-06_msg-296_Carvideos_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/Carvideos/2026-05-06_msg-297_Carvideos_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/Carvideos/2026-05-06_msg-297_Carvideos_photo.jpg" alt="2026-05-06 message 297 (photo)"></a>
+        <div class="exhibit-meta">2026-05-06 message 297 (photo)</div>
+        <a class="open-link" href="evidence-files/Carvideos/2026-05-06_msg-297_Carvideos_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-Ollehellman" data-search="ollehellman olle hellman appeal copyright strike hey! has anyone noticed a drop in engagement rate after receiving a fake copyright strike? even though everything says the account is normal and reach hasn’t changed, the engagement still seems lower. hey! has anyone noticed a drop in engagement rate after receiving a fake copyright strike? even though everything says the account is normal and reach hasn’t changed, the engagement still seems lower. when im trying to appeal a fake copy right claim it sends me to a help center page, does this happen for you as well? ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>Ollehellman (Olle Hellman)</h2>
+          </div>
+          <a class="jump-link" href="#case-Ollehellman">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>2 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span></div>
+        <p class="summary">Hey! Has anyone noticed a drop in engagement rate after receiving a fake copyright strike? Even though everything says the account is normal and reach hasn’t changed, the engagement still seems lower.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-07 message 424</span>
+          <p>Hey! Has anyone noticed a drop in engagement rate after receiving a fake copyright strike? Even though everything says the account is normal and reach hasn’t changed, the engagement still seems lower.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 452</span>
+          <p>When im trying to appeal a fake copy right Claim it sends me to a help center page, does this happen for you as well?</p>
+        </li>
+        </ul>
+        
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      <article class="case" id="case-Serenity_Found" data-search="serenity_found 🌎 appeal copyright strike support yes, it’s pretty obvious. just stay consistent and focus on posting high-quality, original content for a while. that’s usually how i handle low engagement after fake strikes. in my experience, it can take around 1-2 weeks for things to return to normal, especially if it’s your first major copyright ... yes, it’s pretty obvious. just stay consistent and focus on posting high-quality, original content for a while. that’s usually how i handle low engagement after fake strikes. in my experience, it can take around 1-2 weeks for things to return to normal, especially if it’s your first major copyright strike. someone posted something very similar before, so instagram’s ai may have treated it as reused or duplicate content. from what i understand, the @paulhilse team also used the same text/design style directly in their carousel without really focusing on ownership or original research behind the concept. since similar versions were already viral before, they may have claimed it as “in-house created content” and reported other pages for infringement. instagram’s ai usually does not verify the full history first... it often just detects similar visuals/text patterns and flags the newer post automatically. you should appeal it by clearly explaining that: the format, wording, and design style are already widely used across instagram multiple similar posts existed before their version there is no exclusive ownership over this type of motivational carousel format you also created and edited your version in-house your content was independently made using a trending public format, not copied directly from one owner it would also help to create a proper pdf as proof including: screenshots of older/similar posts from different pages timestamps and upload dates examples showing the trend existed before their upload side-by-side comparisons proving the concept is widely reused then attach that pdf in your appeal. you can also use instagram’s official appeal/copyright counter form or contact meta support directly, especially if you have meta verified or an active subscription on any account. yeah, reviews usually take ages. i recently had one post flagged too, and instagram support suggested filling out the official forms directly from instagram’s help pages online instead of only using the in-app review - &quot;instagram copyright appeal form&quot; (https://help.instagram.com/contact/552695131608132?utm_source) yeah, the appeal system feels painfully slow 😭 hope this one gets recovered too. did any of your other pages come back after getting hit with integrity? ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>Serenity_Found (🌎)</h2>
+          </div>
+          <a class="jump-link" href="#case-Serenity_Found">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>1 exhibits</span>
+          <span>4 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span><span>support</span></div>
+        <p class="summary">Yes, it’s pretty obvious. Just stay consistent and focus on posting high-quality, original content for a while. That’s usually how I handle low engagement after fake strikes. In my experience, it can take around 1-2 weeks for things to return to normal, especially if it’s your first major copyright ...</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-07 message 425</span>
+          <p>Yes, it’s pretty obvious. Just stay consistent and focus on posting high-quality, original content for a while. That’s usually how I handle low engagement after fake strikes. In my experience, it can take around 1-2 weeks for things to return to normal, especially if it’s your first major copyright strike.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 568</span>
+          <p>Someone posted something very similar before, so Instagram’s AI may have treated it as reused or duplicate content. From what I understand, the @paulhilse team also used the same text/design style directly in their carousel without really focusing on ownership or original research behind the concept. Since similar versions were already viral before, they may have claimed it as “in-house created content” and reported other pages for infringement. Instagram’s AI usually does not verify the full history first... it often just detects similar visuals/text patterns and flags the newer post automatically. You should appeal it by clearly explaining that: the format, wording, and design style are already widely used across Instagram multiple similar posts existed before their version there is no exclusive ownership over this type of motivational carousel format you also created and edited your version in-house your content was independently made using a trending public format, not copied directly from one owner It would also help to create a proper PDF as proof including: screenshots of older/similar posts from different pages timestamps and upload dates examples showing the trend existed before their upload side-by-side comparisons proving the concept is widely reused Then attach that PDF in your appeal. You can also use Instagram’s official appeal/copyright counter form or contact Meta support directly, especially if you have Meta Verified or an active subscription on any account.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 572</span>
+          <p>Yeah, reviews usually take ages. I recently had one post flagged too, and Instagram support suggested filling out the official forms directly from Instagram’s help pages online instead of only using the in-app review - &quot;Instagram Copyright Appeal Form&quot; (https://help.instagram.com/contact/552695131608132?utm_source)</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 616</span>
+          <p>Yeah, the appeal system feels painfully slow 😭 Hope this one gets recovered too. Did any of your other pages come back after getting hit with integrity?</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>id:552695131608132</li>
+<li><a href="https://help.instagram.com/contact/552695131608132?utm_source" target="_blank" rel="noopener">https://help.instagram.com/contact/552695131608132?utm_source</a></li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/Serenity_Found/2026-05-08_msg-605_Serenity_Found_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/Serenity_Found/2026-05-08_msg-605_Serenity_Found_photo.jpg" alt="2026-05-08 message 605 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 605 (photo)</div>
+        <a class="open-link" href="evidence-files/Serenity_Found/2026-05-08_msg-605_Serenity_Found_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-LUXKAHN" data-search="luxkahn lux copyright strike guys, @luxury here. one thing that’s worked for me if you’ve been hit with a fake copyright strike: go to the person/account they claimed you copied. for example, they struck @luxury over a video i originally made myself on my personal account @sir. i filled out a retraction form using the details f... guys, @luxury here. one thing that’s worked for me if you’ve been hit with a fake copyright strike: go to the person/account they claimed you copied. for example, they struck @luxury over a video i originally made myself on my personal account @sir. i filled out a retraction form using the details from @sir and the email connected to that account and the strike got retracted. ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>LUXKAHN (Lux)</h2>
+          </div>
+          <a class="jump-link" href="#case-LUXKAHN">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        <div class="chips"><span>copyright</span><span>strike</span></div>
+        <p class="summary">Guys, @Luxury here. One thing that’s worked for me if you’ve been hit with a fake copyright strike: Go to the person/account they claimed you copied. For example, they struck @Luxury over a video I originally made myself on my personal account @Sir. I filled out a retraction form using the details f...</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-07 message 457</span>
+          <p>Guys, @Luxury here. One thing that’s worked for me if you’ve been hit with a fake copyright strike: Go to the person/account they claimed you copied. For example, they struck @Luxury over a video I originally made myself on my personal account @Sir. I filled out a retraction form using the details from @Sir and the email connected to that account and the strike got retracted.</p>
+        </li>
+        </ul>
+        
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      <article class="case" id="case-amex" data-search="amex amex appeal best to not appeal best to not appeal i don’t know whats the point of the appeal option if they will just permanently disable the account right after yes do not appeal   a friend of mine also got banned for integrity randomly, on a private, inactive account   he hasn’t used the account in over five whole years it was locked by two factor authentication which he lost now recently i told him to check it  it was banned, i already guessed the ban reason would be account integrity and i told him to check it and my gut feeling was correct ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>amex</h2>
+          </div>
+          <a class="jump-link" href="#case-amex">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>4 exhibits</span>
+          <span>3 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span></div>
+        <p class="summary">best to not appeal</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-07 message 469</span>
+          <p>best to not appeal</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-07 message 470</span>
+          <p>I don’t know whats the point of the appeal option if they will just permanently disable the account right after</p>
+        </li>
+        
+
+        <li>
+          <span>2026-06-04 message 1432</span>
+          <p>Yes do not appeal</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/amex/2026-05-07_msg-482_amex_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/amex/2026-05-07_msg-482_amex_photo.jpg" alt="2026-05-07 message 482 (photo)"></a>
+        <div class="exhibit-meta">2026-05-07 message 482 (photo)</div>
+        <a class="open-link" href="evidence-files/amex/2026-05-07_msg-482_amex_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/amex/2026-05-08_msg-523_amex_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/amex/2026-05-08_msg-523_amex_photo.jpg" alt="2026-05-08 message 523 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 523 (photo)</div>
+        <a class="open-link" href="evidence-files/amex/2026-05-08_msg-523_amex_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/amex/2026-05-20_msg-1134_amex_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/amex/2026-05-20_msg-1134_amex_photo.jpg" alt="2026-05-20 message 1134 (photo)"></a>
+        <div class="exhibit-meta">2026-05-20 message 1134 (photo)</div>
+        <a class="open-link" href="evidence-files/amex/2026-05-20_msg-1134_amex_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">A friend of mine also got banned for integrity randomly, on a private, inactive account He hasn’t used the account in over five whole years it was locked by two factor authentication which he lost now recently I told him to check it It was BANNED, I already guessed the ban reason would be account integrity and I told him to check it and my gut feeling was correct</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <video controls preload="metadata" src="evidence-files/amex/2026-06-03_msg-1413_amex_video.MOV"></video>
+        <div class="exhibit-meta">2026-06-03 message 1413 (video)</div>
+        <a class="open-link" href="evidence-files/amex/2026-06-03_msg-1413_amex_video.MOV" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-LukeGosseling" data-search="lukegosseling luke gosseling appeal copyright strike reported multiple large pages affected by fake copyright and integrity issues, including @mindsetraptors, @forthinkingminds, @hustling.millionaires, @girlieceo, and @wifi.hustlers. i had the same but came back automatically without appealing has anyone in here ever had an ad taken down for copyright?😂 it’s not paul hilse who reported it. it’s just some random indian kid who pretended to be paul hilse with a random gmail account appealing copyrights is pointless, just gotta get it back with a rep and put your account on private for a while where would you appeal? bcs usually those reviews for strikes take ages do you know which email he used to strike? does anyone know how strikes work on tiktok or youtube shorts? has anyone in here ever had an ad taken down for copyright?😂  right now there’s also this thing that people send you scam links like this, if you click it your accounts can get banned   happened to a guy i know this was one of the numbers who was sending those links here&#x27;s what happened with me until now:  i own @mindsetraptors that had 1.5m followers.  i posted an ad for @paulhilse 4nd of may. i received a strike from paulhilse@outlook.com (fake email) on 5th  may and to me this was the second copyright i got and took down my page.  besides that i have @forthinkingminds 840k get taken down and back up for integrity and it just won’t stay up since last week even tho i don’t appeal or use a rep  besides that i have @hustling.millionaires 658k and createimpro   another one. my account that was banned for integrity came back again after a day, i’m in this loop rn where it gets banned, then comes back and gotta change my password">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>LukeGosseling (Luke Gosseling)</h2>
+          </div>
+          <a class="jump-link" href="#case-LukeGosseling">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>9 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span></div>
+        <p class="summary">Reported multiple large pages affected by fake copyright and integrity issues, including @mindsetraptors, @forthinkingminds, @hustling.millionaires, @girlieceo, and @wifi.hustlers.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-07 message 488</span>
+          <p>I had the same but came back automatically without appealing</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 545</span>
+          <p>Has anyone in here ever had an ad taken down for copyright?😂</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 570</span>
+          <p>It’s not Paul hilse who reported it. It’s just some random Indian kid who pretended to be Paul hilse with a random gmail account Appealing copyrights is pointless, just gotta get it back with a rep and put your account on private for a while</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 571</span>
+          <p>Where would you appeal? Bcs usually those reviews for strikes take ages</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 648</span>
+          <p>Do you know which email he used to strike?</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 656</span>
+          <p>Does anyone know how strikes work on TikTok or YouTube shorts?</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>attachment:photo</li>
+<li><a href="https://www.instagram.com/p/DYqAEH6FmVQ/?img_index=1" target="_blank" rel="noopener">https://www.instagram.com/p/DYqAEH6FmVQ/?img_index=1</a></li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-08_msg-545_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-08_msg-545_LukeGosseling_photo.jpg" alt="2026-05-08 message 545 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 545 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-08_msg-545_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Has anyone in here ever had an ad taken down for copyright?😂</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-08_msg-567_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-08_msg-567_LukeGosseling_photo.jpg" alt="2026-05-08 message 567 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 567 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-08_msg-567_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-08_msg-636_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-08_msg-636_LukeGosseling_photo.jpg" alt="2026-05-08 message 636 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 636 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-08_msg-636_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Right now there’s also this thing that people send you scam links like this, if you click it your accounts can get banned Happened to a guy I know</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-08_msg-637_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-08_msg-637_LukeGosseling_photo.jpg" alt="2026-05-08 message 637 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 637 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-08_msg-637_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">This was one of the numbers who was sending those links</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-09_msg-737_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-09_msg-737_LukeGosseling_photo.jpg" alt="2026-05-09 message 737 (photo)"></a>
+        <div class="exhibit-meta">2026-05-09 message 737 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-09_msg-737_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Here&#x27;s what happened with me until now: I own @mindsetraptors that had 1.5M followers. I posted an ad for @paulhilse 4nd of may. I received a strike from paulhilse@outlook.com (fake email) on 5th may and to me this was the second copyright i got and took down my page. Besides that I have @forthinkingminds 840k get taken down and back up for integrity and it just won’t stay up since last week even tho I don’t appeal or use a rep Besides that I have @hustling.millionaires 658k and createimpro</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-09_msg-738_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-09_msg-738_LukeGosseling_photo.jpg" alt="2026-05-09 message 738 (photo)"></a>
+        <div class="exhibit-meta">2026-05-09 message 738 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-09_msg-738_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-09_msg-739_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-09_msg-739_LukeGosseling_photo.jpg" alt="2026-05-09 message 739 (photo)"></a>
+        <div class="exhibit-meta">2026-05-09 message 739 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-09_msg-739_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-09_msg-768_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-09_msg-768_LukeGosseling_photo.jpg" alt="2026-05-09 message 768 (photo)"></a>
+        <div class="exhibit-meta">2026-05-09 message 768 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-09_msg-768_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Another one.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/LukeGosseling/2026-05-10_msg-883_LukeGosseling_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/LukeGosseling/2026-05-10_msg-883_LukeGosseling_photo.jpg" alt="2026-05-10 message 883 (photo)"></a>
+        <div class="exhibit-meta">2026-05-10 message 883 (photo)</div>
+        <a class="open-link" href="evidence-files/LukeGosseling/2026-05-10_msg-883_LukeGosseling_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">My account that was banned for integrity came back again after a day, I’m in this loop rn where it gets banned, then comes back and gotta change my password</div>
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-chunc" data-search="chunc 😂 appeal support if you didn’t appeal, i’d recommend buying an unban since they’re cheaper when un-appealed, usually after you appeal it will cost over $1000 for an unban, regardless we shouldn’t be paying for unbans when we have done nothing wrong 😑 i’ve been scammed a few times with these “instagram unban” service... if you didn’t appeal, i’d recommend buying an unban since they’re cheaper when un-appealed, usually after you appeal it will cost over $1000 for an unban, regardless we shouldn’t be paying for unbans when we have done nothing wrong 😑 i’ve been scammed a few times with these “instagram unban” services and so has @amex, i think meta encourages these unban services if anything since they barely check emails and they make it difficult to reach out to support. if you were to go to google and search up instagram unban you would see hundreds of thousands of services of dudes in india and pakistan doing unban services, usually they overcharge you and proxy the service off a instagram representative or they just straight up scam you. this market has become so big it has became many people’s main source of income, just unbanning instagram users, prominently this happens in communities like oguser’s.. tl;dr everyone just wants your money and meta doesn’t put in enough effort to help and support the creators and users empowering its platform, and they make it deliberately difficult to get your account unbanned and get the help and support you need. it happened to this page a year ago too :/  ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>chunc (😂)</h2>
+          </div>
+          <a class="jump-link" href="#case-chunc">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>3 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>support</span></div>
+        <p class="summary">If you didn’t appeal, I’d recommend buying an unban since they’re cheaper when un-appealed, usually after you appeal it will cost over $1000 for an unban, regardless we shouldn’t be paying for unbans when we have done NOTHING wrong 😑 I’ve been scammed a few times with these “Instagram unban” service...</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-07 message 513</span>
+          <p>If you didn’t appeal, I’d recommend buying an unban since they’re cheaper when un-appealed, usually after you appeal it will cost over $1000 for an unban, regardless we shouldn’t be paying for unbans when we have done NOTHING wrong 😑 I’ve been scammed a few times with these “Instagram unban” services and so has @amex, I think meta encourages these unban services if anything since they barely check emails and they make it difficult to reach out to support. If you were to go to Google and search up Instagram unban you would see hundreds of thousands of services of dudes in India and Pakistan doing unban services, usually they overcharge you and proxy the service off a Instagram representative or they just straight up scam you. This market has become so big it has became many people’s main source of income, just unbanning Instagram users, prominently this happens in communities like OGUSER’s.. TL;DR EVERYONE just wants your money and meta doesn’t put in enough effort to help and support the creators and users empowering its platform, and they make it deliberately difficult to get your account unbanned and get the help and support you need.</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/chunc/2026-05-07_msg-512_chunc_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/chunc/2026-05-07_msg-512_chunc_photo.jpg" alt="2026-05-07 message 512 (photo)"></a>
+        <div class="exhibit-meta">2026-05-07 message 512 (photo)</div>
+        <a class="open-link" href="evidence-files/chunc/2026-05-07_msg-512_chunc_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">It happened to this page a year ago too :/</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/chunc/2026-05-12_msg-1012_chunc_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/chunc/2026-05-12_msg-1012_chunc_photo.jpg" alt="2026-05-12 message 1012 (photo)"></a>
+        <div class="exhibit-meta">2026-05-12 message 1012 (photo)</div>
+        <a class="open-link" href="evidence-files/chunc/2026-05-12_msg-1012_chunc_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/chunc/2026-05-12_msg-1013_chunc_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/chunc/2026-05-12_msg-1013_chunc_photo.jpg" alt="2026-05-12 message 1013 (photo)"></a>
+        <div class="exhibit-meta">2026-05-12 message 1013 (photo)</div>
+        <a class="open-link" href="evidence-files/chunc/2026-05-12_msg-1013_chunc_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-manojkumardahiya" data-search="manojkumardahiya manoj appeal copyright strike reported @millionairestutor and other pages hit by fake copyright claims, extortion attempts, anonymous contacts, and subsequent integrity bans. here&#x27;s what happened with me until now, follow my text with the image sequence for best understanding: i owned @millionairestutor that had 600k followers. i posted a usual reel from johnny harris crediting him and even giving link to his full video on 4 feb 2026. i received a strike from economyarab21@proton.me on 18th feb and to me this was the first copyright i ever got by now. i talked to few people and 90% them said it seems legit to them maybe from his team. got advised to reach out to them. i did, no reply first, asked maybe with compensation, he straight up asked how much i can pay. i got hint immediately that this is scam. i ignored. nothing happened now for days. on 23 march 2026 i got strike from savetoinvest99@gmail.com which is fake mail on the name of @savetoinvest . as we&#x27;ve been working together since 2021 i immediately contacting him and things got clearer immediately. this is a scam. i then appealed within the app citing my words that please review this again as this is a fake strike. it was written on the form that this information will also be shared with the reporting party (the scammer). as expected, he got furious and within few mins sent me another strike from billionairedirector47@gmail.com which is another fake mail under name of my another client @billionairedirector and this is how the conversation went further 👇 the 2 voice notes are in hindi, basically he&#x27;s really proud of his skills and says he do this on daily basis and strikes hundreds of pages day and night. i lied few things in the chat to get any info possible but he really knows what he&#x27;s doing, payments in crypto, contacts via secured mediums being anon as much as possible. he gave me his telegram as well @baninfinity this is the same guy who striked kunal the guy https://www.instagram.com/thekunalshah/ with page ig it was millionairesteps smthng like that. and flauted that &#x27;uski to g*nd fat gayi merese&#x27; meaning he fled away with torned a** this is the same guy who&#x27;s been striking few of us we know each other&#x27;s pages. also mentioned our fellow pages he striked all of them and will continue until he gets paid. and we all know they won&#x27;t. first he gives 1-2 strikes to threaten and then if we don&#x27;t pay, says &quot;okay i&#x27;ll just straight up ban it, no worries&quot;     here&#x27;s what happened with me until now, follow my text with the image sequence for best understanding:  i owned @millionairestutor that had 600k followers.  i posted a usual reel from johnny harris crediting him and even giving link to his full video on 4 feb 2026. i received a strike from economyarab21@proton.me on 18th feb and to me this was the first copyright i ever got by now. i talked to few people and 90% them said it seems legit to them maybe from his team. got advised to reach out to th   it was written on the form that this information will also be shared with the reporting party (the scammer). as expected, he got furious and within few mins sent me another strike from billionairedirector47@gmail.com which is another fake mail under name of my another client @billionairedirector and this is how the conversation went further 👇    also this is a old screenshot i received from a random guy. idk how tf he even got my personal mail to contact me. also this is a old screenshot i received from a random guy. idk how tf he even got my personal mail to contact me. that looked same talking style i noticed. this was his contact.  after few days of talking with him he deleted this whatsapp account as well. i took help from police and cyber officials but seems like there was no information present even with a mobile number. totally anon idk how.   check the files in this zip 👆 check the files in this zip 👆  i analyzed the reporting method and this was the method he used on me and probably on some of your pages as well.   this @aipageonig is stuck here. no matter how many times i upload my selfie. @wealthpageonig got suspended immediately. got appeal results after about 2 weeks. only this page i didn’t appealed yet. page was banned on 3 may and these cute support guys are still working on my case 😂😂  🥸 ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>manojkumardahiya (Manoj)</h2>
+          </div>
+          <a class="jump-link" href="#case-manojkumardahiya">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>27 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span></div>
+        <p class="summary">Reported @millionairestutor and other pages hit by fake copyright claims, extortion attempts, anonymous contacts, and subsequent integrity bans.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-08 message 583</span>
+          <p>Here&#x27;s what happened with me until now, Follow my text with the image sequence for best understanding: I owned @millionairestutor that had 600K followers. I posted a usual reel from Johnny Harris crediting him and even giving link to his full video on 4 Feb 2026. I received a strike from economyarab21@proton.me on 18th Feb and to me this was the first copyright i ever got by now. I talked to few people and 90% them said it seems legit to them maybe from his team. Got advised to reach out to them. I did, No reply first, asked maybe with compensation, he straight up asked how much i can pay. I got hint immediately that this is scam. I ignored. Nothing happened now for days. On 23 March 2026 I got strike from savetoinvest99@gmail.com which is fake mail on the name of @savetoinvest . As we&#x27;ve been working together since 2021 I immediately contacting him and things got clearer immediately. This is a scam. I then appealed within the app citing my words that please review this again as this is a fake strike.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 586</span>
+          <p>It was written on the form that this information will also be shared with the reporting party (the scammer). As expected, he got furious and within few mins sent me another strike from billionairedirector47@gmail.com which is another fake mail under name of my another client @billionairedirector and this is how the conversation went further 👇</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 594</span>
+          <p>The 2 voice notes are in hindi, Basically he&#x27;s really proud of his skills and says he do this on daily basis and strikes hundreds of pages day and night. I lied few things in the chat to get any info possible but he really knows what he&#x27;s doing, Payments in Crypto, Contacts via secured mediums being anon as much as possible. He gave me his telegram as well @baninfinity</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 595</span>
+          <p>This is the same guy who striked Kunal the guy https://www.instagram.com/thekunalshah/ with page ig it was millionairesteps smthng like that. and flauted that &#x27;uski to g*nd fat gayi merese&#x27; meaning he fled away with torned a** This is the same guy who&#x27;s been striking few of us we know each other&#x27;s pages.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 598</span>
+          <p>Also mentioned our fellow pages he striked all of them and will continue until he gets paid. and we all know they won&#x27;t.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-08 message 599</span>
+          <p>First he gives 1-2 strikes to threaten and then if we don&#x27;t pay, says &quot;Okay i&#x27;ll just straight up ban it, no worries&quot;</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>attachment:document</li>
+<li>attachment:photo</li>
+<li><a href="https://www.instagram.com/thekunalshah/" target="_blank" rel="noopener">https://www.instagram.com/thekunalshah/</a></li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-579_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-579_manojkumardahiya_document.PNG" alt="2026-05-08 message 579 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 579 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-579_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-580_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-580_manojkumardahiya_document.PNG" alt="2026-05-08 message 580 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 580 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-580_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-581_manojkumardahiya_document.png" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-581_manojkumardahiya_document.png" alt="2026-05-08 message 581 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 581 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-581_manojkumardahiya_document.png" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-582_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-582_manojkumardahiya_document.PNG" alt="2026-05-08 message 582 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 582 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-582_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-583_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-583_manojkumardahiya_document.PNG" alt="2026-05-08 message 583 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 583 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-583_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Here&#x27;s what happened with me until now, Follow my text with the image sequence for best understanding: I owned @millionairestutor that had 600K followers. I posted a usual reel from Johnny Harris crediting him and even giving link to his full video on 4 Feb 2026. I received a strike from economyarab21@proton.me on 18th Feb and to me this was the first copyright i ever got by now. I talked to few people and 90% them said it seems legit to them maybe from his team. Got advised to reach out to th</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-584_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-584_manojkumardahiya_document.PNG" alt="2026-05-08 message 584 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 584 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-584_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-585_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-585_manojkumardahiya_document.PNG" alt="2026-05-08 message 585 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 585 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-585_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-586_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-586_manojkumardahiya_document.PNG" alt="2026-05-08 message 586 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 586 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-586_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">It was written on the form that this information will also be shared with the reporting party (the scammer). As expected, he got furious and within few mins sent me another strike from billionairedirector47@gmail.com which is another fake mail under name of my another client @billionairedirector and this is how the conversation went further 👇</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-587_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-587_manojkumardahiya_document.PNG" alt="2026-05-08 message 587 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 587 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-587_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-588_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-588_manojkumardahiya_document.PNG" alt="2026-05-08 message 588 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 588 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-588_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-589_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-589_manojkumardahiya_document.PNG" alt="2026-05-08 message 589 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 589 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-589_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-590_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-590_manojkumardahiya_document.PNG" alt="2026-05-08 message 590 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 590 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-590_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Also this is a old screenshot i received from a random guy. Idk how tf he even got my personal mail to contact me.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-590_manojkumardahiya_document.PNG" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-590_manojkumardahiya_document.PNG" alt="2026-05-08 message 590 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 590 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-590_manojkumardahiya_document.PNG" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Also this is a old screenshot i received from a random guy. Idk how tf he even got my personal mail to contact me. That looked same talking style i noticed.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-591_manojkumardahiya_document.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-591_manojkumardahiya_document.jpg" alt="2026-05-08 message 591 (document)"></a>
+        <div class="exhibit-meta">2026-05-08 message 591 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-591_manojkumardahiya_document.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">This was his contact. After few days of talking with him he deleted this whatsapp account as well. I took help from Police and Cyber officials but seems like there was no information present even with a mobile number. Totally anon idk how.</div>
+      </div>
+    
+
+          <div class="exhibit missing">
+            <div class="exhibit-meta">2026-05-08 message 593 (video)</div>
+            <div class="caption">download failed: HTTP Error 400: Bad Request</div>
+          </div>
+        
+
+      <div class="exhibit">
+        <div class="file-icon">FILE</div>
+        <div class="exhibit-meta">2026-05-08 message 601 (document)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-601_manojkumardahiya_document.zip" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-602_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-602_manojkumardahiya_photo.jpg" alt="2026-05-08 message 602 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 602 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-602_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Check the files in this zip 👆</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-602_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-602_manojkumardahiya_photo.jpg" alt="2026-05-08 message 602 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 602 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-602_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Check the files in this zip 👆 I analyzed the reporting method and this was the method he used on me and probably on some of your pages as well.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-606_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-606_manojkumardahiya_photo.jpg" alt="2026-05-08 message 606 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 606 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-606_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-607_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-607_manojkumardahiya_photo.jpg" alt="2026-05-08 message 607 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 607 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-607_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-608_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-608_manojkumardahiya_photo.jpg" alt="2026-05-08 message 608 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 608 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-608_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">This @aipageonig is stuck here. No matter how many times I upload my selfie.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-610_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-610_manojkumardahiya_photo.jpg" alt="2026-05-08 message 610 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 610 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-610_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">@wealthpageonig got suspended immediately.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-607_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-607_manojkumardahiya_photo.jpg" alt="2026-05-08 message 607 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 607 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-607_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Got appeal results after about 2 weeks.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-614_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-614_manojkumardahiya_photo.jpg" alt="2026-05-08 message 614 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 614 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-614_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Only this page I didn’t appealed yet.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-617_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-617_manojkumardahiya_photo.jpg" alt="2026-05-08 message 617 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 617 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-617_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Page was banned on 3 May and these cute support guys are still working on my case 😂😂</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-618_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-618_manojkumardahiya_photo.jpg" alt="2026-05-08 message 618 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 618 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-618_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-08_msg-643_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-08_msg-643_manojkumardahiya_photo.jpg" alt="2026-05-08 message 643 (photo)"></a>
+        <div class="exhibit-meta">2026-05-08 message 643 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-08_msg-643_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">🥸</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/manojkumardahiya/2026-05-09_msg-758_manojkumardahiya_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/manojkumardahiya/2026-05-09_msg-758_manojkumardahiya_photo.jpg" alt="2026-05-09 message 758 (photo)"></a>
+        <div class="exhibit-meta">2026-05-09 message 758 (photo)</div>
+        <a class="open-link" href="evidence-files/manojkumardahiya/2026-05-09_msg-758_manojkumardahiya_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-jacobv" data-search="jacobv jacob appeal copyright disabled strike support reported @godswiener banned after three allegedly false copyright strikes and a blackmail demand for retractions. my page @godswiener was banned on april 29th, someone striked three of my posts falsely with copyright, one being an ad for stake, one being another for a client of mine, and one post being a random meme. i confirmed they didn&#x27;t have any ownership of this content they took down. when i tried to contact the individual that striked me about this matter he just tried blackmailing me into sending him money for the retractions (which i did not do). my page is still banned now. i&#x27;ve tried appealing the claims but no response as of yet. i even tried using meta verified support but they just keep telling me to appeal using the forms. my page @godswiener was banned on april 29th, someone striked three of my posts falsely with copyright, one being an ad for stake, one being another ad for a client of mine, and one post being a random meme. i confirmed they didn&#x27;t have any ownership of this content they took down. when i tried to contact the individual that striked me about this matter he just tried blackmailing me into sending him money for the retractions (which i did not do). my page is still banned now. i&#x27;ve tried appealing the claims but no response as of yet. i even tried using meta verified support but they just keep telling me to appeal using the forms. my page @godswiener was banned on april 29th, someone striked three of my posts falsely with copyright, one being an ad for stake, one being another ad for a client of mine, and one post being a random meme. i confirmed that they didn&#x27;t have any ownership of this content that was taken down. when i tried to contact the individual that striked me about this matter he just tried blackmailing me into sending him money for the retractions (which i did not do). my page is still banned now. i&#x27;ve tried appealing the claims but no response as of yet. i even tried using meta verified support but they just keep telling me to appeal using the forms. my page @godswiener was banned on april 29th, someone striked three of my posts falsely with copyright, one being an ad for stake, one being another ad for a client of mine, and one post being a random meme. i confirmed that they didn&#x27;t have any ownership of this content that was taken down. when i tried to contact the individual that striked me about this matter he just tried blackmailing me into sending him money for the retractions (which i did not do). screenshots attached above. my page is still banned now. i&#x27;ve tried appealing the claims but no response as of yet. i even tried using meta verified support but they just keep telling me to appeal using the forms. has anyone had luck using copyright appeals? i just got these emails back from my copyright appeal forms i submitted.. my page is currently disabled for copyright     ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>jacobv (Jacob)</h2>
+          </div>
+          <a class="jump-link" href="#case-jacobv">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>5 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>disabled</span><span>strike</span><span>support</span></div>
+        <p class="summary">Reported @godswiener banned after three allegedly false copyright strikes and a blackmail demand for retractions.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-10 message 781</span>
+          <p>My page @godswiener was banned on April 29th, someone striked three of my posts falsely with copyright, one being an ad for Stake, one being another for a client of mine, and one post being a random meme. I confirmed they didn&#x27;t have any ownership of this content they took down. When I tried to contact the individual that striked me about this matter he just tried blackmailing me into sending him money for the retractions (which I did not do). My page is still banned now. I&#x27;ve tried appealing the claims but no response as of yet. I even tried using Meta Verified support but they just keep telling me to appeal using the forms.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-10 message 781</span>
+          <p>My page @godswiener was banned on April 29th, someone striked three of my posts falsely with copyright, one being an ad for Stake, one being another Ad for a client of mine, and one post being a random meme. I confirmed they didn&#x27;t have any ownership of this content they took down. When I tried to contact the individual that striked me about this matter he just tried blackmailing me into sending him money for the retractions (which I did not do). My page is still banned now. I&#x27;ve tried appealing the claims but no response as of yet. I even tried using Meta Verified support but they just keep telling me to appeal using the forms.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-10 message 781</span>
+          <p>My page @godswiener was banned on April 29th, someone striked three of my posts falsely with copyright, one being an ad for Stake, one being another Ad for a client of mine, and one post being a random meme. I confirmed that they didn&#x27;t have any ownership of this content that was taken down. When I tried to contact the individual that striked me about this matter he just tried blackmailing me into sending him money for the retractions (which I did not do). My page is still banned now. I&#x27;ve tried appealing the claims but no response as of yet. I even tried using Meta Verified support but they just keep telling me to appeal using the forms.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-10 message 781</span>
+          <p>My page @godswiener was banned on April 29th, someone striked three of my posts falsely with copyright, one being an ad for Stake, one being another Ad for a client of mine, and one post being a random meme. I confirmed that they didn&#x27;t have any ownership of this content that was taken down. When I tried to contact the individual that striked me about this matter he just tried blackmailing me into sending him money for the retractions (which I did not do). Screenshots attached above. My page is still banned now. I&#x27;ve tried appealing the claims but no response as of yet. I even tried using Meta Verified support but they just keep telling me to appeal using the forms.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-10 message 783</span>
+          <p>has anyone had luck using copyright appeals?</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-17 message 1116</span>
+          <p>I just got these emails back from my copyright appeal forms I submitted.. my page is currently disabled for copyright</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/jacobv/2026-05-10_msg-777_jacobv_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/jacobv/2026-05-10_msg-777_jacobv_photo.jpg" alt="2026-05-10 message 777 (photo)"></a>
+        <div class="exhibit-meta">2026-05-10 message 777 (photo)</div>
+        <a class="open-link" href="evidence-files/jacobv/2026-05-10_msg-777_jacobv_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/jacobv/2026-05-10_msg-778_jacobv_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/jacobv/2026-05-10_msg-778_jacobv_photo.jpg" alt="2026-05-10 message 778 (photo)"></a>
+        <div class="exhibit-meta">2026-05-10 message 778 (photo)</div>
+        <a class="open-link" href="evidence-files/jacobv/2026-05-10_msg-778_jacobv_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/jacobv/2026-05-10_msg-779_jacobv_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/jacobv/2026-05-10_msg-779_jacobv_photo.jpg" alt="2026-05-10 message 779 (photo)"></a>
+        <div class="exhibit-meta">2026-05-10 message 779 (photo)</div>
+        <a class="open-link" href="evidence-files/jacobv/2026-05-10_msg-779_jacobv_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/jacobv/2026-05-10_msg-780_jacobv_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/jacobv/2026-05-10_msg-780_jacobv_photo.jpg" alt="2026-05-10 message 780 (photo)"></a>
+        <div class="exhibit-meta">2026-05-10 message 780 (photo)</div>
+        <a class="open-link" href="evidence-files/jacobv/2026-05-10_msg-780_jacobv_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/jacobv/2026-05-17_msg-1115_jacobv_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/jacobv/2026-05-17_msg-1115_jacobv_photo.jpg" alt="2026-05-17 message 1115 (photo)"></a>
+        <div class="exhibit-meta">2026-05-17 message 1115 (photo)</div>
+        <a class="open-link" href="evidence-files/jacobv/2026-05-17_msg-1115_jacobv_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-RudiR" data-search="rudir rudi copyright strike reported @entreprneurinsights received fake copyright strikes from an outlook address and another allegedly fake claimant. hello guys, i’m the owner of entreprneurinsights. i had 2 fake copyright strikes, one was one video about donald trump talking, it was from kiyosaki‘s channel and someone made an outlook email, pretending to be hotmanparis (lawyer from indonesia) which is weird because it was a video from kiyosaki, not even from him. the other one was a promo for emotionlesstrades. same thing fake email and got a copyright strike. hello guys, i’m the owner of entreprneurinsights. i had 2 fake copyright strikes, one was one video about donald trump talking, it was from kiyosaki‘s channel and someone made an outlook email, pretending to be hotmanparis (lawyer from indonesia) which is weird because it was a video from kiyosaki, not even from him. the other one was a promo for emotionlesstrades. same thing fake email and got a copyright strike.  ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>RudiR (Rudi)</h2>
+          </div>
+          <a class="jump-link" href="#case-RudiR">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>3 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        <div class="chips"><span>copyright</span><span>strike</span></div>
+        <p class="summary">Reported @entreprneurinsights received fake copyright strikes from an Outlook address and another allegedly fake claimant.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-10 message 796</span>
+          <p>Hello guys, I’m the owner of entreprneurinsights. I had 2 fake copyright strikes, one was one video about Donald Trump talking, it was from Kiyosaki‘s channel and someone made an outlook email, pretending to be hotmanparis (lawyer from Indonesia) which is weird because it was a video from kiyosaki, not even from him. The other one was a promo for emotionlesstrades. Same thing fake email and got a copyright strike.</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>attachment:photo</li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/RudiR/2026-05-10_msg-796_RudiR_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/RudiR/2026-05-10_msg-796_RudiR_photo.jpg" alt="2026-05-10 message 796 (photo)"></a>
+        <div class="exhibit-meta">2026-05-10 message 796 (photo)</div>
+        <a class="open-link" href="evidence-files/RudiR/2026-05-10_msg-796_RudiR_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Hello guys, I’m the owner of entreprneurinsights. I had 2 fake copyright strikes, one was one video about Donald Trump talking, it was from Kiyosaki‘s channel and someone made an outlook email, pretending to be hotmanparis (lawyer from Indonesia) which is weird because it was a video from kiyosaki, not even from him. The other one was a promo for emotionlesstrades. Same thing fake email and got a copyright strike.</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/RudiR/2026-05-10_msg-797_RudiR_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/RudiR/2026-05-10_msg-797_RudiR_photo.jpg" alt="2026-05-10 message 797 (photo)"></a>
+        <div class="exhibit-meta">2026-05-10 message 797 (photo)</div>
+        <a class="open-link" href="evidence-files/RudiR/2026-05-10_msg-797_RudiR_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/RudiR/2026-05-10_msg-798_RudiR_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/RudiR/2026-05-10_msg-798_RudiR_photo.jpg" alt="2026-05-10 message 798 (photo)"></a>
+        <div class="exhibit-meta">2026-05-10 message 798 (photo)</div>
+        <a class="open-link" href="evidence-files/RudiR/2026-05-10_msg-798_RudiR_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-mehdiddi" data-search="mehdiddi mehdi mustfa appeal copyright disabled reported paying significant sums around copyright issues, losing multiple pages with millions of followers, and account integrity disablements after appeals. hey guys, i am here to share my story with all of you, i have been hit with copyrights since last year, and already paid more than $12k last 6 months. i normally only post people’s whose content we have the right to and paid us to get featured recently, i deleted almost all the content, except the content that i was paid to post, and i still got hit with copyrights claims, i asked the content owners why they did it, they said they haven’t done anything 3-4 days ago, 4 of my accounts were suspended for no obvious reason and today i woke up to the notification of an other account suspension due to copyright (content that i was paid to post) now, i am unable to work, because my clients are asking me for refunds (as they said we paid you to get featured on all the pages, not 1 or 2) for context, the pages i lost had a total followers of 4-5 million followers. at some point i lost every page (more than 7 million followers) the biggest network in my niche and remained without income, since i dedicated the last 7-8 years of my life building it! luckily i built a newsletter in the last couple years, that could pay me to pay the people that work with me! if there’s a way out to solve it, i am with you and let me know if anyone can help because this is getting out of hand! has anyone had success recovering their pages without paying the copyright scammers ? hi guys, my account has been suspended for no reason, no copyright pr anything my content is very respectful and 100% self made i used to have 7 pages of over 7 million followers in under 1 week, i lost them all! it’s very unfortunate what meta is doing to us thank you so much, what kind of detail would you need? since i have been told not to appeal i lost 4 all in one moment due to community standards on account integrity one page got suspended after a couple of days due to fake copyrights (posts i have been paid to post) and 2 days ago, my main account of 2,7 million followers has been suspended due to community standards on account integrity even though we own 100% of the content that we make ourselves i am afraid to take any legal action and then lose them altogether guys, i appealed, and they disabled my account it was not copyright or anything, just integrity we post our own content, and don’t follow the guidelines please if anyone can help, since that’s my main account that gives me the income to sustain my life and family and have been building this for almost 8 years now hi guys,  my account has been suspended for no reason, no copyright pr anything   my content is very respectful and 100% self made  i used to have 7 pages of over 7 million followers   in under 1 week, i lost them all!  it’s very unfortunate what meta is doing to us guys,  i appealed, and they disabled my account   it was not copyright or anything, just integrity   we post our own content, and don’t follow the guidelines   please if anyone can help, since that’s my main account that gives me the income to sustain my life and family and have been building this for almost 8 years now guys,  i appealed, and they disabled my account   it was not copyright or anything, just integrity   we post our own content, and do follow the guidelines   please if anyone can help, since that’s my main account that gives me the income to sustain my life and family and have been building this for almost 8 years now">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>mehdiddi (Mehdi Mustfa)</h2>
+          </div>
+          <a class="jump-link" href="#case-mehdiddi">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>3 exhibits</span>
+          <span>6 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>disabled</span></div>
+        <p class="summary">Reported paying significant sums around copyright issues, losing multiple pages with millions of followers, and account integrity disablements after appeals.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-11 message 943</span>
+          <p>Hey guys, I am here to share my story with all of you, I have been hit with copyrights since last year, and already paid more than $12k last 6 months. I normally only post people’s whose content we have the right to and paid us to get featured Recently, I deleted almost all the content, except the content that I was paid to post, and I still got hit with copyrights claims, I asked the content owners why they did it, they said they haven’t done anything 3-4 days ago, 4 of my accounts were suspended for no obvious reason And today I woke up to the notification of an other account suspension due to copyright (content that I was paid to post) Now, I am unable to work, because my clients are asking me for refunds (as they said we paid you to get featured on all the pages, not 1 or 2) For context, the pages I lost had a total followers of 4-5 Million followers. At some point I lost every page (more than 7 Million followers) the biggest network in my niche and remained without income, since I dedicated the last 7-8 years of my life building it! Luckily I built a newsletter in the last couple years, that could pay me to pay the people that work with me! If there’s a way out to solve it, I am with you and let me know if anyone can help because this is getting out of hand!</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-13 message 1064</span>
+          <p>Has anyone had success recovering their pages without paying the copyright scammers ?</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-16 message 1091</span>
+          <p>Hi guys, My account has been suspended for no reason, no copyright pr anything My content is very respectful and 100% self made I used to have 7 pages of over 7 Million followers In under 1 week, I lost them all! It’s very unfortunate what meta is doing to us</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-17 message 1113</span>
+          <p>Thank you so much, What kind of detail would you need? Since I have been told not to appeal</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-17 message 1114</span>
+          <p>I lost 4 all in one moment due to community standards on account integrity One page got suspended after a couple of days due to fake copyrights (posts I have been paid to post) And 2 days ago, my main account of 2,7 Million followers has been suspended due to community standards on account integrity even though we own 100% of the content that we make ourselves I am afraid to take any legal action and then lose them altogether</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-20 message 1133</span>
+          <p>Guys, I appealed, and they disabled my account It was not copyright or anything, just integrity We post our own content, and don’t follow the guidelines Please if anyone can help, since that’s my main account that gives me the income to sustain my life and family and have been building this for almost 8 years now</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>attachment:photo</li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/mehdiddi/2026-05-16_msg-1091_mehdiddi_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mehdiddi/2026-05-16_msg-1091_mehdiddi_photo.jpg" alt="2026-05-16 message 1091 (photo)"></a>
+        <div class="exhibit-meta">2026-05-16 message 1091 (photo)</div>
+        <a class="open-link" href="evidence-files/mehdiddi/2026-05-16_msg-1091_mehdiddi_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Hi guys, My account has been suspended for no reason, no copyright pr anything My content is very respectful and 100% self made I used to have 7 pages of over 7 Million followers In under 1 week, I lost them all! It’s very unfortunate what meta is doing to us</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/mehdiddi/2026-05-20_msg-1133_mehdiddi_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mehdiddi/2026-05-20_msg-1133_mehdiddi_photo.jpg" alt="2026-05-20 message 1133 (photo)"></a>
+        <div class="exhibit-meta">2026-05-20 message 1133 (photo)</div>
+        <a class="open-link" href="evidence-files/mehdiddi/2026-05-20_msg-1133_mehdiddi_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Guys, I appealed, and they disabled my account It was not copyright or anything, just integrity We post our own content, and don’t follow the guidelines Please if anyone can help, since that’s my main account that gives me the income to sustain my life and family and have been building this for almost 8 years now</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/mehdiddi/2026-05-20_msg-1133_mehdiddi_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/mehdiddi/2026-05-20_msg-1133_mehdiddi_photo.jpg" alt="2026-05-20 message 1133 (photo)"></a>
+        <div class="exhibit-meta">2026-05-20 message 1133 (photo)</div>
+        <a class="open-link" href="evidence-files/mehdiddi/2026-05-20_msg-1133_mehdiddi_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Guys, I appealed, and they disabled my account It was not copyright or anything, just integrity We post our own content, and do follow the guidelines Please if anyone can help, since that’s my main account that gives me the income to sustain my life and family and have been building this for almost 8 years now</div>
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-Louisgson" data-search="louisgson louis gleeson  reported an account issue in the mica archive. use the linked messages and exhibits below for the supporting record.  ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>Louisgson (Louis Gleeson)</h2>
+          </div>
+          <a class="jump-link" href="#case-Louisgson">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>0 key messages</span>
+        </div>
+        
+        <p class="summary">Reported an account issue in the MICA archive. Use the linked messages and exhibits below for the supporting record.</p>
+        
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li><a href="https://www.instagram.com/p/DYNktcIyx80/" target="_blank" rel="noopener">https://www.instagram.com/p/DYNktcIyx80/</a></li></ul>
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      <article class="case" id="case-succylz" data-search="succylz niko/succy 𝕏 disabled anybody know how to fix this, personal account, no previously deleted posts, used it for commenting on other accounts without anything spammy just to like pin comments. got disabled for “not following community guidelines “ anybody know how to fix this, personal account, no previously deleted posts, used it for commenting on other accounts without anything spammy just to like pin comments. got disabled for “not following community guidelines “ anybody know how to fix this, personal account, no previously deleted posts, used it for commenting on other accounts without anything spammy just to like pin comments. got disabled for “not following community guidelines “">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>succylz (Niko/SUCCY 𝕏)</h2>
+          </div>
+          <a class="jump-link" href="#case-succylz">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>1 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        <div class="chips"><span>disabled</span></div>
+        <p class="summary">Anybody know how to fix this, personal account, no previously deleted posts, used it for commenting on other accounts without anything spammy just to like pin comments. Got disabled for “not following community guidelines “</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-12 message 1030</span>
+          <p>Anybody know how to fix this, personal account, no previously deleted posts, used it for commenting on other accounts without anything spammy just to like pin comments. Got disabled for “not following community guidelines “</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>attachment:photo</li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/succylz/2026-05-12_msg-1030_succylz_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/succylz/2026-05-12_msg-1030_succylz_photo.jpg" alt="2026-05-12 message 1030 (photo)"></a>
+        <div class="exhibit-meta">2026-05-12 message 1030 (photo)</div>
+        <a class="open-link" href="evidence-files/succylz/2026-05-12_msg-1030_succylz_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Anybody know how to fix this, personal account, no previously deleted posts, used it for commenting on other accounts without anything spammy just to like pin comments. Got disabled for “not following community guidelines “</div>
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-Ovwen" data-search="ovwen owen strike are these integrity bans from the same people sending the strikes? are these integrity bans from the same people sending the strikes? ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>Ovwen (Owen)</h2>
+          </div>
+          <a class="jump-link" href="#case-Ovwen">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        <div class="chips"><span>strike</span></div>
+        <p class="summary">Are these integrity bans from the same people sending the strikes?</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-12 message 1032</span>
+          <p>Are these integrity bans from the same people sending the strikes?</p>
+        </li>
+        </ul>
+        
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      <article class="case" id="case-Kahan-Modi" data-search="kahan modi kahan modi appeal copyright strike hey everyone! i run a movie themed page on instagram and i recently had a copyright strike on my page but the problem is when i go to submit the appeal, the link says “sorry, this content is not available right now”. has any one of you dealt with this issue? any help would be appreciated. thank you. hey everyone! i run a movie themed page on instagram and i recently had a copyright strike on my page but the problem is when i go to submit the appeal, the link says “sorry, this content is not available right now”. has any one of you dealt with this issue? any help would be appreciated. thank you. ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>Kahan Modi</h2>
+          </div>
+          <a class="jump-link" href="#case-Kahan-Modi">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span></div>
+        <p class="summary">Hey everyone! I run a movie themed page on Instagram and I recently had a copyright strike on my page but the problem is when I go to submit the appeal, the link says “Sorry, this content is not available right now”. Has any one of you dealt with this issue? Any help would be appreciated. Thank you.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-13 message 1047</span>
+          <p>Hey everyone! I run a movie themed page on Instagram and I recently had a copyright strike on my page but the problem is when I go to submit the appeal, the link says “Sorry, this content is not available right now”. Has any one of you dealt with this issue? Any help would be appreciated. Thank you.</p>
+        </li>
+        </ul>
+        
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      <article class="case" id="case-Visionwall" data-search="visionwall alex (the.success.club) lombard copyright strike reported a 1.7m page, a 530k page, and smaller pages down from false copyright strikes, with extortion evidence and active litigation. i have two pages down. both from false copyright strikes. 1.7m motivational / news theme page and 530k account. (i have 2 other smaller random pages that got taken out as collateral damage). i’ve gone through all of the normal methods of recovery without success. i had someone attempt to recover the 530k page and ended up refunding me. i’m currently in an active lawsuit with meta after they emailed me saying my 1.7m account would be deactivated. i also have literal proof of being blackmailed and extorted by the guy who filed multiple copyright claims. he emailed me asking for money and showing me his bullshit false claims being reported. my smaller account went down on march 13 and my 1.7 officially went down april 8th. all of the copyright strikes came in within a few days of eachother. my court date is june 6th. would love help putting together a strong and compelling case to prove that there’s a widespread issue going on across the industry. has anyone tried removing all of the copyright strikes? these “high reps” haven’t been able to help but i wonder if simply removing all of the strikes would work ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>Visionwall (Alex (the.success.club) Lombard)</h2>
+          </div>
+          <a class="jump-link" href="#case-Visionwall">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>2 key messages</span>
+        </div>
+        <div class="chips"><span>copyright</span><span>strike</span></div>
+        <p class="summary">Reported a 1.7M page, a 530K page, and smaller pages down from false copyright strikes, with extortion evidence and active litigation.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-13 message 1058</span>
+          <p>I have two pages down. Both from false copyright strikes. 1.7M motivational / news theme page And 530k account. (I have 2 other smaller random pages that got taken out as collateral damage). I’ve gone through all of the normal methods of recovery without success. I had someone attempt to recover the 530k page and ended up refunding me. I’m currently in an active lawsuit with Meta after they emailed me saying my 1.7M account would be deactivated. I also have literal proof of being blackmailed and extorted by the guy who filed multiple copyright claims. He emailed me asking for money and showing me his bullshit false claims being reported. My smaller account went down on March 13 and my 1.7 officially went down April 8th. All of the copyright strikes came in within a few days of eachother. My court date is June 6th. Would love help putting together a strong and compelling case to prove that there’s a widespread issue going on across the industry.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-06-05 message 1461</span>
+          <p>Has anyone tried removing all of the copyright strikes? These “high reps” haven’t been able to help but I wonder if simply removing all of the strikes would work</p>
+        </li>
+        </ul>
+        
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      <article class="case" id="case-realasitgetshh" data-search="realasitgetshh real as it gets appeal copyright strike here’s documentation of my entire case in the hope it helps you brother i’ve had 3 false copyright strikes filed on my page and through god i’m somehow still kicking however, feel free to use as you see fit pray everything works out for you 🙏 here’s documentation of my entire case in the hope it helps you brother i’ve had 3 false copyright strikes filed on my page and through god i’m somehow still kicking however, feel free to use as you see fit pray everything works out for you 🙏 here’s documentation of my entire case in the hope it helps you brother i’ve had 3 false copyright strikes filed on my page and through god’s grace i’m somehow still kicking however, feel free to use as you see fit pray everything works out for you 🙏 i have had a court case, i’m still trying to work it out through appeals at the moment i haven’t had a court case, i’m still trying to work it out through appeals at the moment ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>realasitgetshh (Real As It Gets)</h2>
+          </div>
+          <a class="jump-link" href="#case-realasitgetshh">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>1 exhibits</span>
+          <span>4 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>copyright</span><span>strike</span></div>
+        <p class="summary">Here’s documentation of my entire case in the hope it helps you brother I’ve had 3 false copyright strikes filed on my page and through God I’m somehow still kicking However, feel free to use as you see fit Pray everything works out for you 🙏</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-13 message 1060</span>
+          <p>Here’s documentation of my entire case in the hope it helps you brother I’ve had 3 false copyright strikes filed on my page and through God I’m somehow still kicking However, feel free to use as you see fit Pray everything works out for you 🙏</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-13 message 1060</span>
+          <p>Here’s documentation of my entire case in the hope it helps you brother I’ve had 3 false copyright strikes filed on my page and through God’s grace I’m somehow still kicking However, feel free to use as you see fit Pray everything works out for you 🙏</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-13 message 1063</span>
+          <p>I have had a court case, I’m still trying to work it out through appeals at the moment</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-13 message 1063</span>
+          <p>I haven’t had a court case, I’m still trying to work it out through appeals at the moment</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <div class="file-icon">FILE</div>
+        <div class="exhibit-meta">2026-05-13 message 1059 (document)</div>
+        <a class="open-link" href="evidence-files/realasitgetshh/2026-05-13_msg-1059_realasitgetshh_document.pdf" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-ralphklipper" data-search="ralphklipper ralphklipper appeal claimant copyright strike hey! i just got a false copyright strike today on my page @howsongswererecorded on ig. it was a widely shared clip of tyler, the creator and a$ap rocky. i submitted an appeal showing proof it was originated from a$ap rocky&#x27;s story and the claimant doesn&#x27;t own the rights to the content. video clip: h... hey! i just got a false copyright strike today on my page @howsongswererecorded on ig. it was a widely shared clip of tyler, the creator and a$ap rocky. i submitted an appeal showing proof it was originated from a$ap rocky&#x27;s story and the claimant doesn&#x27;t own the rights to the content. video clip: https://www.youtube.com/shorts/ha2wy77b7b0 one quick question: when i submitted the appeal, i didn&#x27;t get a confirmation saying ‘you submitted an appeal’ i was just redirected to this page ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>ralphklipper</h2>
+          </div>
+          <a class="jump-link" href="#case-ralphklipper">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>1 exhibits</span>
+          <span>2 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>claimant</span><span>copyright</span><span>strike</span></div>
+        <p class="summary">Hey! I just got a false copyright strike today on my page @howsongswererecorded on IG. It was a widely shared clip of Tyler, The Creator and A$AP rocky. I submitted an appeal showing proof it was originated from A$AP Rocky&#x27;s story and the claimant doesn&#x27;t own the rights to the content. video clip: h...</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-17 message 1104</span>
+          <p>Hey! I just got a false copyright strike today on my page @howsongswererecorded on IG. It was a widely shared clip of Tyler, The Creator and A$AP rocky. I submitted an appeal showing proof it was originated from A$AP Rocky&#x27;s story and the claimant doesn&#x27;t own the rights to the content. video clip: https://www.youtube.com/shorts/ha2WY77b7b0</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-17 message 1105</span>
+          <p>One quick question: when I submitted the appeal, I didn&#x27;t get a confirmation saying ‘you submitted an appeal’ I was just redirected to this page</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li><a href="https://www.youtube.com/shorts/ha2WY77b7b0" target="_blank" rel="noopener">https://www.youtube.com/shorts/ha2WY77b7b0</a></li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/ralphklipper/2026-05-17_msg-1106_ralphklipper_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/ralphklipper/2026-05-17_msg-1106_ralphklipper_photo.jpg" alt="2026-05-17 message 1106 (photo)"></a>
+        <div class="exhibit-meta">2026-05-17 message 1106 (photo)</div>
+        <a class="open-link" href="evidence-files/ralphklipper/2026-05-17_msg-1106_ralphklipper_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-hamid_elmoussaoui" data-search="hamid_elmoussaoui hamid elmoussaoui appeal disabled restored support reported 12 to 15 connected instagram pages with over 4m followers disabled after alleged fraud or integrity actions, despite many support tickets and ownership evidence. hello everyone, my name is hamid elmoussaoui, and i am sharing my situation here because i honestly do not know what else to do anymore. for several years, i built and managed a network of instagram pages connected through account center. in total, i had around 15 accounts with a combined audience of over 4 million followers. these pages were not just hobby pages - they were my full-time business and only source of income. everything started on february 24, when one of my main accounts was suddenly suspended for alleged fraud. after that, many of my other connected accounts were permanently disabled for “integrity” violations, even though they were different pages built over many years. some affected accounts include: @handsomemenspace (767k) @viralheartthrob (789k) @trendingstud (759k) @hotmenmeet (566k) @charminggentlemans (467k) @sweetprettyboys (333k) @buzzingbeauu (292k) @buzzworthybae (139k) @sexyguyskarma (108k) and several others overnight, i lost years of work, millions of followers, my business, and my only source of income. steps i already took: submitted multiple appeals contacted meta support many times subscribed to meta verified to access enhanced support opened more than 22 support tickets provided original emails, phone numbers, screenshots, and proof of ownership tried professional recovery services and consultations despite all of this, i never received any meaningful resolution. some agents told me my accounts would be restored, but then i was ghosted without updates. the financial and emotional impact has been devastating. i supported my family and helped cover medical expenses for my sick brother through this business. losing everything at once completely changed my life and affected my mental health severely. at this point, i am mainly trying to understand whether anyone here has experienced something similar with mass integrity bans connected through account center, and whether there is any legitimate path toward review or escalation. thank you to anyone who takes the time to read my story. ok hope this message finds you well. my name is hamid elmoussaoui, and i am reaching out during a very difficult time. my entire business was built on instagram, where i managed 12 pages with over 4 million combined followers. this was my full-time income and supported my family and medical expenses. unfortunately, all my accounts were suddenly hacked/disabled, and i lost access to everything i built over years, without any clear violation on my side. affected accounts: @buzzworthybae (139k) @charminggentlemans (467k) @handsomemenspace (767k) @viralheartthrob (789k) @hotmenmeet (566k) @trendingstud (759k) @sexyguyskarma (108k) @hunkzen (2k) @sweetprettyboys (333k) @realboysfyp (50k) @buzzingbeauu (292k) @viralstunner (762k) @beefcakeboutique (46k) i have tried all appeals and support channels but still have no resolution. i am respectfully asking for any help, guidance, or direction you can provide, as this situation has completely affected my livelihood and i am struggling to support my family. thank you very much for your time and understanding. kind regards, hamid elmoussaoui the same story with me brother sorry heart that about your account, also lost over 4m + business accounts ‏over the past several years, imy entire business through instagram, managing 12 pages with a combined audience of over 4 million followers. this was not just a hobby; it was my full-time work and my only source of income, through which i supported my family, paid off debts, and contributed to the medical expenses of my sick brother. in a single moment, years of hard work, consistency, and dedication were taken away. this has left me in a devastating situation, both financially and emotionally. i am now struggling to provide for my family and cover essential expenses.    ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>hamid_elmoussaoui (Hamid Elmoussaoui)</h2>
+          </div>
+          <a class="jump-link" href="#case-hamid_elmoussaoui">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>3 exhibits</span>
+          <span>3 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>disabled</span><span>restored</span><span>support</span></div>
+        <p class="summary">Reported 12 to 15 connected Instagram pages with over 4M followers disabled after alleged fraud or integrity actions, despite many support tickets and ownership evidence.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-17 message 1119</span>
+          <p>Hello everyone, My name is Hamid Elmoussaoui, and I am sharing my situation here because I honestly do not know what else to do anymore. For several years, I built and managed a network of Instagram pages connected through Account Center. In total, I had around 15 accounts with a combined audience of over 4 million followers. These pages were not just hobby pages - they were my full-time business and only source of income. Everything started on February 24, when one of my main accounts was suddenly suspended for alleged fraud. After that, many of my other connected accounts were permanently disabled for “integrity” violations, even though they were different pages built over many years. Some affected accounts include: @handsomemenspace (767K) @viralheartthrob (789K) @trendingstud (759K) @hotmenmeet (566K) @charminggentlemans (467K) @sweetprettyboys (333K) @buzzingbeauu (292K) @buzzworthybae (139K) @sexyguyskarma (108K) and several others Overnight, I lost years of work, millions of followers, my business, and my only source of income. Steps I already took: Submitted multiple appeals Contacted Meta support many times Subscribed to Meta Verified to access enhanced support Opened more than 22 support tickets Provided original emails, phone numbers, screenshots, and proof of ownership Tried professional recovery services and consultations Despite all of this, I never received any meaningful resolution. Some agents told me my accounts would be restored, but then I was ghosted without updates. The financial and emotional impact has been devastating. I supported my family and helped cover medical expenses for my sick brother through this business. Losing everything at once completely changed my life and affected my mental health severely. At this point, I am mainly trying to understand whether anyone here has experienced something similar with mass integrity bans connected through Account Center, and whether there is any legitimate path toward review or escalation. Thank you to anyone who takes the time to read my story.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-18 message 1126</span>
+          <p>Ok hope this message finds you well. My name is Hamid Elmoussaoui, and I am reaching out during a very difficult time. My entire business was built on Instagram, where I managed 12 pages with over 4 million combined followers. This was my full-time income and supported my family and medical expenses. Unfortunately, all my accounts were suddenly hacked/disabled, and I lost access to everything I built over years, without any clear violation on my side. Affected accounts: @buzzworthybae (139K) @charminggentlemans (467K) @handsomemenspace (767K) @viralheartthrob (789K) @hotmenmeet (566K) @trendingstud (759K) @sexyguyskarma (108K) @hunkzen (2K) @sweetprettyboys (333K) @realboysfyp (50K) @buzzingbeauu (292K) @viralstunner (762K) @beefcakeboutique (46K) I have tried all appeals and support channels but still have no resolution. I am respectfully asking for any help, guidance, or direction you can provide, as this situation has completely affected my livelihood and I am struggling to support my family. Thank you very much for your time and understanding. Kind regards, Hamid Elmoussaoui</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-20 message 1142</span>
+          <p>The same story with me brother sorry heart that about your account, also lost over 4M + business accounts ‏Over the past several years, Imy entire business through Instagram, managing 12 pages with a combined audience of over 4 million followers. This was not just a hobby; it was my full-time work and my only source of income, through which I supported my family, paid off debts, and contributed to the medical expenses of my sick brother. In a single moment, years of hard work, consistency, and dedication were taken away. This has left me in a devastating situation, both financially and emotionally. I am now struggling to provide for my family and cover essential expenses.</p>
+        </li>
+        </ul>
+        
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <div class="file-icon">FILE</div>
+        <div class="exhibit-meta">2026-05-17 message 1120 (document)</div>
+        <a class="open-link" href="evidence-files/hamid_elmoussaoui/2026-05-17_msg-1120_hamid_elmoussaoui_document.zip" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <div class="file-icon">FILE</div>
+        <div class="exhibit-meta">2026-05-17 message 1121 (document)</div>
+        <a class="open-link" href="evidence-files/hamid_elmoussaoui/2026-05-17_msg-1121_hamid_elmoussaoui_document.zip" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+          <div class="exhibit missing">
+            <div class="exhibit-meta">2026-05-17 message 1122 (document)</div>
+            <div class="caption">download failed: HTTP Error 400: Bad Request</div>
+          </div>
+        
+
+      <div class="exhibit">
+        <div class="file-icon">FILE</div>
+        <div class="exhibit-meta">2026-05-17 message 1123 (document)</div>
+        <a class="open-link" href="evidence-files/hamid_elmoussaoui/2026-05-17_msg-1123_hamid_elmoussaoui_document.zip" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-igdann" data-search="igdann dan appeal support reported a business account suspended after a coordinated impersonation attack and chose to avoid in-app appeal pending human support. hey guys, this morning we had our businesses account suspended following a coordinated impersonation attack. just looking for some advice/ if you’ve had a similar experience please reach out holding off on the in-app appeal, don&#x27;t want to feed it back into the same automated system without new evidence being considered. plan is to reach human support via a connected account. going to find rep as don’t trust the appeal process hey guys,   this morning we had our businesses account suspended following a coordinated impersonation attack.   just looking for some advice/ if you’ve had a similar experience please reach out   may be worth reaching out to the article writer with our story">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>igdann (Dan)</h2>
+          </div>
+          <a class="jump-link" href="#case-igdann">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>4 exhibits</span>
+          <span>3 key messages</span>
+        </div>
+        <div class="chips"><span>appeal</span><span>support</span></div>
+        <p class="summary">Reported a business account suspended after a coordinated impersonation attack and chose to avoid in-app appeal pending human support.</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-05-27 message 1366</span>
+          <p>Hey guys, This morning we had our businesses account suspended following a coordinated impersonation attack. Just looking for some advice/ if you’ve had a similar experience please reach out</p>
+        </li>
+        
+
+        <li>
+          <span>2026-05-27 message 1369</span>
+          <p>Holding off on the in-app appeal, don&#x27;t want to feed it back into the same automated system without new evidence being considered. Plan is to reach human support via a connected account.</p>
+        </li>
+        
+
+        <li>
+          <span>2026-06-03 message 1431</span>
+          <p>Going to find rep as don’t trust the appeal process</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li>attachment:photo</li></ul>
+        <h3>Exhibits</h3><div class="exhibits">
+      <div class="exhibit">
+        <a href="evidence-files/igdann/2026-05-27_msg-1366_igdann_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/igdann/2026-05-27_msg-1366_igdann_photo.jpg" alt="2026-05-27 message 1366 (photo)"></a>
+        <div class="exhibit-meta">2026-05-27 message 1366 (photo)</div>
+        <a class="open-link" href="evidence-files/igdann/2026-05-27_msg-1366_igdann_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">Hey guys, This morning we had our businesses account suspended following a coordinated impersonation attack. Just looking for some advice/ if you’ve had a similar experience please reach out</div>
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/igdann/2026-05-27_msg-1367_igdann_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/igdann/2026-05-27_msg-1367_igdann_photo.jpg" alt="2026-05-27 message 1367 (photo)"></a>
+        <div class="exhibit-meta">2026-05-27 message 1367 (photo)</div>
+        <a class="open-link" href="evidence-files/igdann/2026-05-27_msg-1367_igdann_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/igdann/2026-05-27_msg-1368_igdann_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/igdann/2026-05-27_msg-1368_igdann_photo.jpg" alt="2026-05-27 message 1368 (photo)"></a>
+        <div class="exhibit-meta">2026-05-27 message 1368 (photo)</div>
+        <a class="open-link" href="evidence-files/igdann/2026-05-27_msg-1368_igdann_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        
+      </div>
+    
+
+      <div class="exhibit">
+        <a href="evidence-files/igdann/2026-06-04_msg-1441_igdann_photo.jpg" target="_blank" rel="noopener"><img loading="lazy" src="evidence-files/igdann/2026-06-04_msg-1441_igdann_photo.jpg" alt="2026-06-04 message 1441 (photo)"></a>
+        <div class="exhibit-meta">2026-06-04 message 1441 (photo)</div>
+        <a class="open-link" href="evidence-files/igdann/2026-06-04_msg-1441_igdann_photo.jpg" target="_blank" rel="noopener">Open exhibit</a>
+        <div class="caption">May be worth reaching out to the article writer with our story</div>
+      </div>
+    </div>
+      </article>
+    
+      <article class="case" id="case-ivanelgrnde" data-search="ivanelgrnde ivan  https://www.404media.co/hackers-simply-asked-meta-ai-to-give-them-access-to-high-profile-instagram-accounts-it-worked/ https://www.404media.co/hackers-simply-asked-meta-ai-to-give-them-access-to-high-profile-instagram-accounts-it-worked/ ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>ivanelgrnde (Ivan)</h2>
+          </div>
+          <a class="jump-link" href="#case-ivanelgrnde">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        
+        <p class="summary">https://www.404media.co/hackers-simply-asked-meta-ai-to-give-them-access-to-high-profile-instagram-accounts-it-worked/</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-06-01 message 1405</span>
+          <p>https://www.404media.co/hackers-simply-asked-meta-ai-to-give-them-access-to-high-profile-instagram-accounts-it-worked/</p>
+        </li>
+        </ul>
+        <h3>Additional links or evidence markers</h3><ul class="markers"><li><a href="https://www.404media.co/hackers-simply-asked-meta-ai-to-give-them-access-to-high-profile-instagram-accounts-it-worked/" target="_blank" rel="noopener">https://www.404media.co/hackers-simply-asked-meta-ai-to-give-them-access-to-high-profile-instagram-accounts-it-worked/</a></li></ul>
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      <article class="case" id="case-SocialMediaTrapLord" data-search="socialmediatraplord social media trap lord copyright strike random, but anyone else dealing not being shown on reels tab or external followers and does anyone know if a copyright strike plays a role in that random, but anyone else dealing not being shown on reels tab or external followers and does anyone know if a copyright strike plays a role in that ">
+        <div class="case-head">
+          <div>
+            <p class="eyebrow">Member case</p>
+            <h2>SocialMediaTrapLord (Social Media Trap Lord)</h2>
+          </div>
+          <a class="jump-link" href="#case-SocialMediaTrapLord">Copy section link</a>
+        </div>
+        <div class="case-stats">
+          <span>0 exhibits</span>
+          <span>1 key messages</span>
+        </div>
+        <div class="chips"><span>copyright</span><span>strike</span></div>
+        <p class="summary">Random, but anyone else dealing not being shown on reels tab or external followers And does anyone know if a copyright strike plays a role in that</p>
+        <h3>Key reported messages</h3><ul class="messages">
+        <li>
+          <span>2026-06-06 message 1485</span>
+          <p>Random, but anyone else dealing not being shown on reels tab or external followers And does anyone know if a copyright strike plays a role in that</p>
+        </li>
+        </ul>
+        
+        <p class="no-exhibits">No downloaded exhibits for this sender yet.</p>
+      </article>
+    
+      </section>
+    </div>
+  </main>
+  <script>
+    const search = document.getElementById('search');
+    const cases = Array.from(document.querySelectorAll('.case'));
+    const rows = Array.from(document.querySelectorAll('.directory-row'));
+    function filterCases() {
+      const q = search.value.trim().toLowerCase();
+      cases.forEach(card => {
+        card.style.display = !q || card.dataset.search.includes(q) ? '' : 'none';
+      });
+      rows.forEach(row => {
+        const href = row.getAttribute('href').replace('#', '');
+        const card = document.getElementById(href);
+        row.style.display = card && card.style.display !== 'none' ? '' : 'none';
+      });
+    }
+    search.addEventListener('input', filterCases);
+    document.querySelectorAll('.jump-link').forEach(link => {
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        const url = window.location.href.split('#')[0] + link.getAttribute('href');
+        if (navigator.clipboard) navigator.clipboard.writeText(url);
+        window.location.hash = link.getAttribute('href');
+      });
+    });
+  </script>
+</body>
+</html>
